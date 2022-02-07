@@ -9,7 +9,7 @@ methods
 
         obj.vtx = p.Results.vtx;
         if isempty(p.Results.faces)
-            obj.faces = 1:length(size(obj.vtx, 1));
+            obj.faces = 1:size(obj.vtx, 1);
         else
             face_len = cellfun(@length, p.Results.faces);
             faces = nan(length(face_len), max(face_len));

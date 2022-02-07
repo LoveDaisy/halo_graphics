@@ -29,12 +29,12 @@ methods
     end
     
     function applyTransform(obj, t)
-        % TODO!!!
+        % TODO!!! CHECK IT!!!
         test_basis = t.transform(eye(3));
         if abs(abs(det(test_basis' * test_basis)) - 1) > 1e-4
             obj.translation = t.transform(obj.translation);
         else
-            obj.rotation_t = test_basis' * obj.rotation_t;
+            obj.rotation_t = t.transform(obj.rotation_t);
         end
     end
     

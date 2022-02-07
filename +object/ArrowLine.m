@@ -23,17 +23,21 @@ end
 methods
     % ========== Override methods ==========
     function draw(obj, varargin)
+        args = cat(1, obj.draw_args(:), varargin(:));
+
         next_plot = get(gca, 'NextPlot');
         hold on;
         vtx = obj.getWorldVtx();
-        line(vtx(:, 1), vtx(:, 2), vtx(:, 3), ...
-            obj.draw_args{:}, ...
-            varargin{:});
+        line_args = object.Graphics3DObj.fileterArgs(args, {'ArrowScale'});
+        line(vtx(:, 1), vtx(:, 2), vtx(:, 3), line_args{:});
         
         % Set arrow scale
-        if obj.arrow_scale > 0
-            obj.arrow_obj.scale = obj.arrow_scale;
-        else
+        for i = 1:2:length(args)
+            if strcmpi(args{i}, 'ArrowScale')
+                obj.arrow_obj.scale = args{i+1};
+            end
+        end
+        if obj.arrow_obj.scale < 0
             seg_len = sqrt(sum(diff(vtx).^2, 2));
             total_len = sum(seg_len);
             obj.arrow_obj.scale = total_len * obj.DEFAULT_SCALE;
@@ -76,10 +80,6 @@ methods
     end
     
     % ========== Other public methods ==========
-    function setArrowScale(obj, s)
-        % Scale to actual size.
-        obj.arrow_scale = s;
-    end
 end
 
 % Protected methods
@@ -104,7 +104,7 @@ methods (Access = protected)
         obj.arrow_obj.rotation_t = t.matt;
         obj.arrow_obj.translation = (v0 + d * abs(x));
         args = cat(1, obj.draw_args(:), varargin(:));
-        args = object.Graphics3DObj.fileterArgs(args, {}, {'^Edge'});
+        args = object.Graphics3DObj.fileterArgs(args, {'ArrowScale'}, {'^Edge'});
         obj.arrow_obj.draw(args{:});
     end
 end
@@ -115,7 +115,6 @@ end
 
 properties
     arrow_obj = object.makeArrowCone(0.3);
-    arrow_scale = -1;
     line_obj = object.Line;
     start_arrow = [];
     end_arrow = [];
