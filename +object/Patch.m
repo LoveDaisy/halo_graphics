@@ -77,6 +77,10 @@ methods
         face = obj.faces(idx, :);
         vtx = obj.vtx(face(~isnan(face)), :);
     end
+
+    function p = getPatch(obj, idx)
+        p = object.Patch(obj.getFaceVertices(idx));
+    end
 end
 
 % Protected methods
