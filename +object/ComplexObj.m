@@ -34,7 +34,7 @@ methods
         if abs(abs(det(test_basis' * test_basis)) - 1) > 1e-4
             obj.translation = t.transform(obj.translation);
         else
-            obj.rotation = test_basis' * obj.rotation;
+            obj.rotation_t = test_basis' * obj.rotation_t;
         end
     end
     

@@ -1,8 +1,8 @@
 classdef Rotation < transform.RigidTransform
 methods
     function vtx = transform(obj, vtx)
-        vtx = bsxfun(@minus, vtx, obj.anchor') * obj.mat';
-        vtx = bsxfun(@plus, vtx, obj.anchor');
+        vtx = bsxfun(@minus, vtx, obj.anchor) * obj.matt;
+        vtx = bsxfun(@plus, vtx, obj.anchor);
     end
 end
 
@@ -34,13 +34,13 @@ methods
             error('Either use from-to form or use axis-theta form!');
         end
 
-        obj.mat = quatrotate([cosd(theta/2), -sind(theta/2) * axis(:)'], eye(3))';
-        obj.anchor = p.Results.anchor;
+        obj.matt = quatrotate([cosd(theta/2), -sind(theta/2) * axis(:)'], eye(3));
+        obj.anchor = p.Results.anchor(:)';
     end
 end
 
 properties
-    mat = eye(3);
-    anchor = zeros(3, 1);
+    matt = eye(3);
+    anchor = zeros(1, 3);
 end
 end

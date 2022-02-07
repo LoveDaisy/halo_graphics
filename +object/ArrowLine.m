@@ -40,6 +40,7 @@ methods
         end
         
         % Set arrow pose and position, then draw
+        vtx = obj.vtx;
         if ~isempty(obj.end_arrow)
             if obj.end_arrow < 0
                 v0 = vtx(end, :);
@@ -100,8 +101,8 @@ methods (Access = protected)
     function drawCone(obj, v0, v1, x, varargin)
         d = v1 - v0;
         t = transform.Rotation('from', [0, 0, 1], 'to', d);
-        obj.arrow_obj.rotation = t.mat;
-        obj.arrow_obj.translation = (v0 + d * abs(x))';
+        obj.arrow_obj.rotation_t = t.matt;
+        obj.arrow_obj.translation = (v0 + d * abs(x));
         args = cat(1, obj.draw_args(:), varargin(:));
         args = object.Graphics3DObj.fileterArgs(args, {}, {'^Edge'});
         obj.arrow_obj.draw(args{:});

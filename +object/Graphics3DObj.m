@@ -22,25 +22,25 @@ methods (Access = protected)
             vtx = [];
             return;
         end
-        [t, r, s] = obj.getWorldTransform();
-        vtx = bsxfun(@plus, obj.vtx * r' * s, t');
+        [t, rt, s] = obj.getWorldTransform();
+        vtx = bsxfun(@plus, obj.vtx * rt * s, t);
     end
 
-    function [t0, r0, s0] = getWorldTransform(obj)
+    function [t0, rt0, s0] = getWorldTransform(obj)
         t0 = obj.translation;
-        r0 = obj.rotation;
+        rt0 = obj.rotation_t;
         s0 = obj.scale;
         if ~isempty(obj.parent)
-            [t, r, s] = obj.parent.getWorldTransform();
-            r0 = r * r0;
-            t0 = r * t0 + t;
-            s0 = s * s0;
+            [t, rt, s] = obj.parent.getWorldTransform();
+            rt0 = rt0 * rt;
+            t0 = t0 * rt + t;
+            s0 = s0 * s;
         end
     end
     
     function copyFrom(obj, from_obj)
         obj.vtx = from_obj.vtx;
-        obj.rotation = from_obj.rotation;
+        obj.rotation_t = from_obj.rotation_t;
         obj.translation = from_obj.translation;
         obj.parent = from_obj.parent;
         obj.draw_args = from_obj.draw_args;
@@ -99,8 +99,8 @@ end
 
 properties (Access = public)
     vtx = [];
-    rotation = eye(3);
-    translation = zeros(3, 1);
+    rotation_t = eye(3);
+    translation = zeros(1, 3);
     scale = 1;
     parent = [];
     draw_args = {};

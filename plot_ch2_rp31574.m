@@ -7,6 +7,7 @@ crystal = optics.make_prism_crystal(crystal_h);
 p0 = [.35, .15, .15, .35] * crystal.vtx(crystal.face{raypath(1)}, :);
 r0 = optics.normalize_vector([-0.87, 1, 2]);
 ray_trace_res = optics.trace_ray(p0, r0, crystal, raypath);
+raypath_pts = [p0 - r0; ray_trace_res(:, 1:3); ray_trace_res(end, 1:3) + ray_trace_res(end, 4:6)];
 
 c0 = object.makePrismCrystal(crystal_h);
 c0.setDrawArgs('FaceColor', 'w', 'FaceAlpha', 0.5, 'LineWidth', 2, 'EdgeColor', 'k');
@@ -22,9 +23,7 @@ for i = 2:length(raypath)-1
 end
 clear c0 curr_c curr_t;
 
-pts = [p0 - r0; ray_trace_res(:, 1:3); ray_trace_res(end, 1:3) + ray_trace_res(end, 4:6)];
-
-line = object.ArrowLine(pts, 'EndArrow', 0.8, 'StartArrow', 0.5);
+line = object.ArrowLine(raypath_pts, 'EndArrow', 0.8, 'StartArrow', 0.5);
 line.setDrawArgs('LineWidth', 2, 'Color', 'r');
 cmp.addObj(line);
 
