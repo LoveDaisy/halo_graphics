@@ -23,7 +23,7 @@ methods
         zz = reshape(vtx(:, 3), obj.data_size);
         
         args = cat(1, obj.draw_args(:), varargin(:));
-        args = object.Graphics3DObj.fileterArgs(args, {'Color'});
+        args = object.Graphics3DObj.filterArgs(args, {'Color'});
         surf(xx, yy, zz, args{:});
     end
     

@@ -65,10 +65,19 @@ curr_line = object.ArrowLine(expand_raypath_pts(3:end, :), 'EndArrow', 1.02);
 curr_line.setDrawArgs(expand_ray_style{:});
 fig_all.addObj(curr_line);
 
+ray_pts = object.Point(raypath_pts(2:end-1, :));
+ray_pts.setDrawArgs('PointScale', 0.02, 'EdgeColor', 'none', 'FaceColor', [252, 93, 83]/255);
+fig_all.addObj(ray_pts);
+
+ray_pts = object.Point(expand_raypath_pts(4:end-1, :));
+ray_pts.setDrawArgs('PointScale', 0.02, 'EdgeColor', 'none', 'FaceColor', 'b');
+fig_all.addObj(ray_pts);
+
 curr_line = object.ArrowLine(expand_raypath_pts(2:end-1, :));
 curr_line.setDrawArgs(ray_style{:});
 fig_expand_hit_face.addObj(curr_line);
 
+% Make final transformation
 final_t = transform.Rotation('from', [0, 0, -1], 'to', [1, 0, 0]);
 fig_all.applyTransform(final_t);
 fig_mirror_face.applyTransform(final_t);

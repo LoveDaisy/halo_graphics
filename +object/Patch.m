@@ -32,7 +32,7 @@ methods
         args = cat(1, obj.draw_args(:), varargin(:));
 
         % Draw faces
-        face_args = object.Graphics3DObj.fileterArgs(args, {}, {'^Line', '^Edge'});
+        face_args = object.Graphics3DObj.filterArgs(args, {}, {'^Line', '^Edge'});
         patch('Faces', obj.faces, 'Vertices', vtx, 'EdgeColor', 'none', face_args{:});
         
         % Draw lines

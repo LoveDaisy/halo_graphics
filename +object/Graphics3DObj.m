@@ -48,7 +48,7 @@ methods (Access = protected)
 end
 
 methods (Static)
-    function args = fileterArgs(args, key_str, key_regexp)
+    function args = filterArgs(args, key_str, key_regexp)
         if nargin == 2
             key_regexp = [];
         end

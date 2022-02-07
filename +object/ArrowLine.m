@@ -28,7 +28,7 @@ methods
         next_plot = get(gca, 'NextPlot');
         hold on;
         vtx = obj.getWorldVtx();
-        line_args = object.Graphics3DObj.fileterArgs(args, {'ArrowScale'});
+        line_args = object.Graphics3DObj.filterArgs(args, {'ArrowScale'});
         line(vtx(:, 1), vtx(:, 2), vtx(:, 3), line_args{:});
         
         % Set arrow scale
@@ -104,7 +104,7 @@ methods (Access = protected)
         obj.arrow_obj.rotation_t = t.matt;
         obj.arrow_obj.translation = (v0 + d * abs(x));
         args = cat(1, obj.draw_args(:), varargin(:));
-        args = object.Graphics3DObj.fileterArgs(args, {'ArrowScale'}, {'^Edge'});
+        args = object.Graphics3DObj.filterArgs(args, {'ArrowScale'}, {'^Edge'});
         obj.arrow_obj.draw(args{:});
     end
 end
