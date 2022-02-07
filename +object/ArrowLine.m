@@ -3,13 +3,17 @@ classdef ArrowLine < object.Graphics3DObj
 methods
     function obj = ArrowLine(varargin)
         p = inputParser;
-        p.addRequired('pts', @(x) validateattributes(x, {'numeric'}, {'ncols', 3}));
+        p.addOptional('pts', [], @(x) validateattributes(x, {'numeric'}, {'ncols', 3}));
         p.addOptional('StartArrow', [], @(x) validateattributes(x, {'numeric'}, {'scalar', 'real'}));
         p.addOptional('EndArrow', [], @(x) validateattributes(x, {'numeric'}, {'scalar', 'real'}));
         p.parse(varargin{:});
 
         obj.vtx = p.Results.pts;
-        obj.line_obj = object.Line(p.Results.pts);
+        if isempty(p.Results.pts)
+            obj.line_obj = object.Line;
+        else
+            obj.line_obj = object.Line(p.Results.pts);
+        end
         obj.start_arrow = p.Results.StartArrow;
         obj.end_arrow = p.Results.EndArrow;
     end
@@ -82,10 +86,14 @@ methods (Access = protected)
     % ========== Override methods ==========
     function copyFrom(obj, from_obj)
         obj.copyFrom@object.Graphics3DObj(from_obj);
+
         obj.arrow_obj = from_obj.arrow_obj.makeCopy();
         obj.line_obj = from_obj.line_obj.makeCopy();
         obj.start_arrow = from_obj.start_arrow;
         obj.end_arrow = from_obj.end_arrow;
+
+        obj.arrow_obj.parent = obj;
+        obj.line_obj.parent = obj;
     end
     
     % ========== Other public methods ==========

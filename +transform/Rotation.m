@@ -22,7 +22,9 @@ methods
             to = p.Results.to;
             to = to / norm(to);
             axis = cross(from, to);
-            theta = asind(norm(axis));
+            s = norm(axis);
+            c = dot(from, to);
+            theta = atan2d(s, c);
             axis = axis / norm(axis);
         elseif norm(p.Results.axis > 1e-4)
             axis = p.Results.axis;

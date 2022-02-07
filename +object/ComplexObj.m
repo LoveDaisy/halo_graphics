@@ -63,6 +63,7 @@ methods (Access = protected)
         obj.objects = cell(1, obj_cnt);
         for i = 1:obj_cnt
             obj.objects{i} = from_obj.objects{i}.makeCopy();
+            obj.objects{i}.parent = obj;
         end
     end
 end
