@@ -18,7 +18,7 @@ methods
     % ========== Override methods ==========
     function draw(obj, varargin)
         vtx = obj.vtx;
-        args = cat(1, obj.draw_args(:), varargin(:));
+        args = cat(1, obj.draw_args(:), varargin(:), {'EdgeColor'; 'none'});
         surf_args = object.Graphics3DObj.filterArgs(args, {'PointScale'});
 
         % Set arrow scale

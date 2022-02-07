@@ -1,16 +1,25 @@
 clear all; close all; clc;
 
+% Style for crystals
 crystal_style = {'FaceColor', 'w', 'FaceAlpha', 0.6, 'LineWidth', 2, 'EdgeColor', 'k'};
-mirror_crystal_style = {'FaceColor', 'w', 'FaceAlpha', 0.6, 'LineStyle', ':', ...
+expand_crystal_style = {'FaceColor', 'w', 'FaceAlpha', 0.6, 'LineStyle', ':', ...
     'LineWidth', 1, 'EdgeColor', 'k'};
-mirror_face_style = {'FaceColor', [1, 1, 1] * 0.1, 'EdgeColor', 'none'};
 hit_crystal_style = {'FaceColor', 'none', 'LineWidth', 1, 'LineStyle', ':', 'EdgeColor', [1, 1, 1] * 0.7};
+
+% Style for faces
+mirror_face_style = {'FaceColor', [1, 1, 1] * 0.1, 'EdgeColor', 'none'};
 hit_face_style = {'FaceColor', [255, 252, 180]/255, 'FaceAlpha', 0.75, 'LineStyle', '-', ...
     'LineWidth', 1.2, 'EdgeColor', 'k'};
 
+% Style for rays
 arrow_scale = 0.2;
-ray_style = {'LineWidth', 2, 'Color', [252, 93, 83]/255, 'ArrowScale', arrow_scale};
-expand_ray_style = {'LineWidth', 1.3, 'Color', 'b', 'ArrowScale', arrow_scale};
+point_scale = 0.02;
+ray_color = [252, 93, 83]/255;
+expand_ray_color = 'b';
+ray_style = {'LineWidth', 2, 'Color', ray_color, 'ArrowScale', arrow_scale};
+expand_ray_style = {'LineWidth', 1.3, 'Color', expand_ray_color, 'ArrowScale', arrow_scale};
+ray_pts_style = {'PointScale', point_scale, 'FaceColor', ray_color};
+expand_ray_pts_style = {'PointScale', point_scale, 'FaceColor', expand_ray_color};
 
 crystal_h = 2;
 crystal = optics.make_prism_crystal(crystal_h);
@@ -35,19 +44,20 @@ fig_expand_hit_face.addObj(curr_face);
 
 curr_c = c0;
 for i = 2:length(raypath)-1
-    curr_t = transform.MirrorReflection(curr_c.getFaceNormal(raypath(i)), ...
-        mean(curr_c.getFaceVertices(raypath(i))));
+    curr_fid = raypath(i);
+    curr_t = transform.MirrorReflection(curr_c.getFaceNormal(curr_fid), ...
+        mean(curr_c.getFaceVertices(curr_fid)));
     curr_c.applyTransform(curr_t);
-    curr_c.setDrawArgs(mirror_crystal_style{:});
+    curr_c.setDrawArgs(expand_crystal_style{:});
     fig_all.addObj(curr_c);
     
-    curr_mirror_face = curr_c.getPatch(raypath(i));
+    curr_mirror_face = curr_c.getPatch(curr_fid);
     curr_mirror_face.setDrawArgs(mirror_face_style{:});
     fig_mirror_face.addObj(curr_mirror_face);
     
     curr_mirror_face.setDrawArgs(hit_face_style{:});
-    curr_c.setDrawArgs(hit_crystal_style{:});
     fig_expand_hit_face.addObj(curr_mirror_face);
+    curr_c.setDrawArgs(hit_crystal_style{:});
     fig_expand_hit_face.addObj(curr_c);
     
     expand_raypath_pts(i+1:end, :) = curr_t.transform(expand_raypath_pts(i+1:end, :));
@@ -55,7 +65,6 @@ end
 curr_face = curr_c.getPatch(raypath(end));
 curr_face.setDrawArgs(hit_face_style{:});
 fig_expand_hit_face.addObj(curr_face);
-clear c0 curr_c curr_t;
 
 curr_line = object.ArrowLine(raypath_pts, 'EndArrow', 1.02, 'StartArrow', 0.5);
 curr_line.setDrawArgs(ray_style{:});
@@ -66,16 +75,17 @@ curr_line.setDrawArgs(expand_ray_style{:});
 fig_all.addObj(curr_line);
 
 ray_pts = object.Point(raypath_pts(2:end-1, :));
-ray_pts.setDrawArgs('PointScale', 0.02, 'EdgeColor', 'none', 'FaceColor', [252, 93, 83]/255);
+ray_pts.setDrawArgs(ray_pts_style{:});
 fig_all.addObj(ray_pts);
 
 ray_pts = object.Point(expand_raypath_pts(4:end-1, :));
-ray_pts.setDrawArgs('PointScale', 0.02, 'EdgeColor', 'none', 'FaceColor', 'b');
+ray_pts.setDrawArgs(expand_ray_pts_style{:});
 fig_all.addObj(ray_pts);
 
 curr_line = object.ArrowLine(expand_raypath_pts(2:end-1, :));
 curr_line.setDrawArgs(ray_style{:});
 fig_expand_hit_face.addObj(curr_line);
+clear curr_* c0
 
 % Make final transformation
 final_t = transform.Rotation('from', [0, 0, -1], 'to', [1, 0, 0]);
