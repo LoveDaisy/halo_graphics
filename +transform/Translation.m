@@ -1,4 +1,4 @@
-classdef Translation < transform.RigidTransform
+classdef Translation < transform.Transform
 methods
     function vtx = transform(obj, vtx)
         vtx = bsxfun(@plus, vtx, obj.v);

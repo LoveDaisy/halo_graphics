@@ -1,4 +1,4 @@
-classdef SimpleReflection < transform.RigidTransform
+classdef SimpleReflection < transform.Transform
 methods
     function vtx = transform(obj, vtx)
         vtx = vtx * (eye(3) - 2 * obj.n' * obj.n);

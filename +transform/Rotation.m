@@ -1,4 +1,4 @@
-classdef Rotation < transform.RigidTransform
+classdef Rotation < transform.Transform
 methods
     function vtx = transform(obj, vtx)
         vtx = bsxfun(@minus, vtx, obj.anchor) * obj.matt;

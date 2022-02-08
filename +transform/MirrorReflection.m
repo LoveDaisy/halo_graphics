@@ -1,4 +1,4 @@
-classdef MirrorReflection < transform.RigidTransform
+classdef MirrorReflection < transform.Transform
 methods
     function vtx = transform(obj, vtx)
         vtx = bsxfun(@minus, vtx, obj.p) * (eye(3) - 2 * obj.n' * obj.n);
