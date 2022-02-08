@@ -3,6 +3,15 @@ methods
     function vtx = transform(obj, vtx)
         vtx = bsxfun(@plus, vtx, obj.v);
     end
+
+    function t = makeCopy(obj)
+        t = transform.Translation;
+        t.copyFrom(obj);
+    end
+
+    function merge(obj, t)
+        obj.v = obj.v + t.v;
+    end
 end
 
 methods
@@ -15,7 +24,14 @@ methods
     end
 end
 
+methods (Access = protected)
+    function copyFrom(obj, from_obj)
+        obj.copyFrom@transform.Transform(from_obj);
+        obj.v = from_obj.v;
+    end
+end
+
 properties
-    v = zeros(1, 3);
+    v
 end
 end

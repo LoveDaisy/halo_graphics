@@ -28,16 +28,6 @@ methods
         set(gca, 'NextPlot', next_plot);
     end
     
-    function applyTransform(obj, t)
-        % TODO!!! CHECK IT!!!
-        test_basis = t.transform(eye(3));
-        if abs(abs(det(test_basis' * test_basis)) - 1) > 1e-4
-            obj.translation = t.transform(obj.translation);
-        else
-            obj.rotation_t = t.transform(obj.rotation_t);
-        end
-    end
-    
     function new_obj = makeCopy(obj)
         new_obj = object.ComplexObj;
         new_obj.copyFrom(obj);
@@ -69,6 +59,6 @@ methods (Access = protected)
 end
 
 properties
-    objects = {};
+    objects
 end
 end

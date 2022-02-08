@@ -3,6 +3,15 @@ methods
     function vtx = transform(obj, vtx)
         vtx = vtx * obj.s;
     end
+
+    function t = makeCopy(obj)
+        t = transform.Scale;
+        t.copyFrom(obj);
+    end
+
+    function merge(obj, t)
+        obj.s = obj.s * t.s;
+    end
 end
 
 methods
@@ -15,7 +24,14 @@ methods
     end
 end
 
+methods (Access = protected)
+    function copyFrom(obj, from_obj)
+        obj.copyFrom@transform.Transform(from_obj);
+        obj.s = from_obj.s;
+    end
+end
+
 properties
-    s = 1;
+    s
 end
 end

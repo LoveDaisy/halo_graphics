@@ -96,28 +96,19 @@ fig_expand_hit_face.applyTransform(final_t);
 %%
 axes_args = {'Position', [0, 0, 1, 1], 'Projection', 'Perspective', ...
     'CameraPosition', [cosd(50), sind(50), 0.2] * 15, 'CameraTarget', [-1, 0.38, -0.65], ...
-    'CameraViewAngle', 12};
+    'CameraViewAngle', 12, 'Visible', 'off', 'DataAspectRatio', [1, 1, 1], 'PlotBoxAspectRatio', [3, 4, 4]};
 
 figure(1); clf;
 set(gcf, 'Color', 'w');
-hold on;
 fig_all.draw();
 set(gca, axes_args{:});
-axis equal;
-axis off;
 
 figure(2); clf;
 set(gcf, 'Color', 'w');
-hold on;
 fig_mirror_face.draw();
 set(gca, axes_args{:});
-axis equal;
-axis off;
 
 figure(3); clf;
 set(gcf, 'Color', 'w');
-hold on;
 fig_expand_hit_face.draw();
 set(gca, axes_args{:});
-axis equal;
-axis off;

@@ -2,8 +2,6 @@ classdef (Abstract) Graphics3DObj < handle
 methods (Abstract)
     draw(obj, varargin);
     
-    applyTransform(obj, t);
-    
     new_obj = makeCopy(obj);
 end
 
@@ -11,10 +9,30 @@ methods
     function setDrawArgs(obj, varargin)
         obj.draw_args = varargin;
     end
+    
+    function applyTransform(obj, t)
+        class_t = class(t);
+        if strcmpi(class_t, 'transform.Scale')
+            obj.scale.merge(t);
+        elseif strcmpi(class_t, 'transform.Rotation')
+            obj.rotation.merge(t);
+        elseif strcmpi(class_t, 'transform.Translation')
+            obj.translation.merge(t);
+        else
+            obj.other_transforms.merge(t);
+        end
+    end
 end
 
 methods (Access = protected)
     function obj = Graphics3DObj()
+        obj.vtx = [];
+        obj.rotation = transform.Rotation;
+        obj.scale = transform.Scale;
+        obj.translation = transform.Translation;
+        obj.other_transforms = transform.CompositeTransform;
+        obj.parent = [];
+        obj.draw_args = {};
     end
 
     function vtx = getWorldVtx(obj)
@@ -22,26 +40,23 @@ methods (Access = protected)
             vtx = [];
             return;
         end
-        [t, rt, s] = obj.getWorldTransform();
-        vtx = bsxfun(@plus, obj.vtx * rt * s, t);
+        t0 = obj.getWorldTransform();
+        vtx = t0.transform(obj.vtx);
     end
 
-    function [t0, rt0, s0] = getWorldTransform(obj)
-        t0 = obj.translation;
-        rt0 = obj.rotation_t;
-        s0 = obj.scale;
+    function t0 = getWorldTransform(obj)
+        t0 = transform.CompositeTransform(obj.scale, obj.rotation, obj.translation, obj.other_transforms);
         if ~isempty(obj.parent)
-            [t, rt, s] = obj.parent.getWorldTransform();
-            rt0 = rt0 * rt;
-            t0 = t0 * rt + t;
-            s0 = s0 * s;
+            t0 = t0.chain(obj.parent.getWorldTransform());
         end
     end
     
     function copyFrom(obj, from_obj)
         obj.vtx = from_obj.vtx;
-        obj.rotation_t = from_obj.rotation_t;
-        obj.translation = from_obj.translation;
+        obj.rotation = from_obj.rotation.makeCopy();
+        obj.scale = from_obj.scale.makeCopy();
+        obj.translation = from_obj.translation.makeCopy();
+        obj.other_transforms = from_obj.other_transforms.makeCopy();
         obj.parent = from_obj.parent;
         obj.draw_args = from_obj.draw_args;
     end
@@ -98,11 +113,12 @@ methods (Static)
 end
 
 properties (Access = public)
-    vtx = [];
-    rotation_t = eye(3);
-    translation = zeros(1, 3);
-    scale = 1;
-    parent = [];
-    draw_args = {};
+    vtx
+    rotation
+    scale
+    translation
+    other_transforms
+    parent
+    draw_args
 end
 end

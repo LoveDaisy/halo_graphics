@@ -17,6 +17,10 @@ end
 methods
     % ========== Override methods ==========
     function draw(obj, varargin)
+        if isempty(obj.vtx)
+            return;
+        end
+
         vtx = obj.getWorldVtx();
         xx = reshape(vtx(:, 1), obj.data_size);
         yy = reshape(vtx(:, 2), obj.data_size);

@@ -1,8 +1,16 @@
 classdef Rotation < transform.Transform
 methods
     function vtx = transform(obj, vtx)
-        vtx = bsxfun(@minus, vtx, obj.anchor) * obj.matt;
-        vtx = bsxfun(@plus, vtx, obj.anchor);
+        vtx = vtx * obj.matt;
+    end
+
+    function t = makeCopy(obj)
+        t = transform.Rotation;
+        t.copyFrom(obj);
+    end
+
+    function merge(obj, t)
+        obj.matt = obj.matt * t.matt;
     end
 end
 
@@ -13,7 +21,6 @@ methods
         p.addParameter('to', zeros(3, 1), @(x) validateattributes(x, {'numeric'}, {'vector', 'numel', 3}));
         p.addParameter('axis', zeros(3, 1), @(x) validateattributes(x, {'numeric'}, {'vector', 'numel', 3}));
         p.addParameter('theta', 0, @(x) validateattributes(x, {'numeric'}, {'vector', 'numel', 3}));
-        p.addParameter('anchor', zeros(3, 1), @(x) validateattributes(x, {'numeric'}, {'vector', 'numel', 3}));
         p.parse(varargin{:});
         
         if norm(p.Results.from) > 1e-4 && norm(p.Results.to) > 1e-4
@@ -26,21 +33,27 @@ methods
             c = dot(from, to);
             theta = atan2d(s, c);
             axis = axis / norm(axis);
-        elseif norm(p.Results.axis > 1e-4)
+        elseif norm(p.Results.axis) > 1e-4
             axis = p.Results.axis;
             axis = axis / norm(axis);
             theta = p.Results.theta;
         else
-            error('Either use from-to form or use axis-theta form!');
+            axis = [1, 0, 0];
+            theta = 0;
         end
 
         obj.matt = quatrotate([cosd(theta/2), -sind(theta/2) * axis(:)'], eye(3));
-        obj.anchor = p.Results.anchor(:)';
+    end
+end
+
+methods (Access = protected)
+    function copyFrom(obj, from_obj)
+        obj.copyFrom@transform.Transform(from_obj);
+        obj.matt = from_obj.matt;
     end
 end
 
 properties
-    matt = eye(3);
-    anchor = zeros(1, 3);
+    matt
 end
 end

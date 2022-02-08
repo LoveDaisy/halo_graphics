@@ -9,7 +9,6 @@ methods
         obj.vtx = p.Results.pts;
         [xx, yy, zz] = sphere();
         obj.sphere_obj = object.Surface(xx, yy, zz);
-        obj.sphere_obj.scale = -1;
     end
 end
 
@@ -22,22 +21,24 @@ methods
         surf_args = object.Graphics3DObj.filterArgs(args, {'PointScale'});
 
         % Set arrow scale
+        scale_set = false;
         for i = 1:2:length(args)
             if strcmpi(args{i}, 'PointScale')
-                obj.sphere_obj.scale = args{i+1};
+                obj.sphere_obj.scale = transform.Scale(args{i+1});
+                scale_set = true;
             end
         end
 
-        if obj.sphere_obj.scale < 0
+        if ~scale_set
             seg_len = sqrt(sum(diff(vtx).^2, 2));
             total_len = sum(seg_len);
-            obj.sphere_obj.scale = total_len * obj.DEFAULT_SCALE;
+            obj.sphere_obj.scale = transform.Scale(total_len * obj.DEFAULT_SCALE);
         end
 
         next_plot = get(gca, 'NextPlot');
         hold on;
         for i = 1:size(vtx, 1)
-            obj.sphere_obj.translation = vtx(i, :);
+            obj.sphere_obj.translation = transform.Translation(vtx(i, :));
             obj.sphere_obj.draw(surf_args{:});
         end
         set(gca, 'NextPlot', next_plot);

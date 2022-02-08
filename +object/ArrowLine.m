@@ -32,15 +32,17 @@ methods
         line(vtx(:, 1), vtx(:, 2), vtx(:, 3), line_args{:});
         
         % Set arrow scale
+        scale_set = false;
         for i = 1:2:length(args)
             if strcmpi(args{i}, 'ArrowScale')
-                obj.arrow_obj.scale = args{i+1};
+                obj.arrow_obj.scale = transform.Scale(args{i+1});
+                scale_set = true;
             end
         end
-        if obj.arrow_obj.scale < 0
+        if ~scale_set
             seg_len = sqrt(sum(diff(vtx).^2, 2));
             total_len = sum(seg_len);
-            obj.arrow_obj.scale = total_len * obj.DEFAULT_SCALE;
+            obj.arrow_obj.scale = transform.Scale(total_len * obj.DEFAULT_SCALE);
         end
         
         % Set arrow pose and position, then draw
@@ -100,9 +102,8 @@ methods (Access = protected)
     % ========== Other public methods ==========
     function drawCone(obj, v0, v1, x, varargin)
         d = v1 - v0;
-        t = transform.Rotation('from', [0, 0, 1], 'to', d);
-        obj.arrow_obj.rotation_t = t.matt;
-        obj.arrow_obj.translation = (v0 + d * abs(x));
+        obj.arrow_obj.rotation = transform.Rotation('from', [0, 0, 1], 'to', d);
+        obj.arrow_obj.translation = transform.Translation(v0 + d * abs(x));
         args = cat(1, obj.draw_args(:), varargin(:));
         args = object.Graphics3DObj.filterArgs(args, {'ArrowScale'}, {'^Edge'});
         obj.arrow_obj.draw(args{:});

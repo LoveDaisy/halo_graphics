@@ -3,6 +3,11 @@ methods
     function vtx = transform(obj, vtx)
         vtx = vtx * (eye(3) - 2 * obj.n' * obj.n);
     end
+
+    function t = makeCopy(obj, from_obj)
+        t = transform.SimpleReflection;
+        t.copyFrom(from_obj);
+    end
 end
 
 methods
@@ -15,7 +20,14 @@ methods
     end
 end
 
+methods (Access = protected)
+    function copyFrom(obj, from_obj)
+        obj.copyFrom@transform.Transform(from_obj);
+        obj.n = from_obj.n;
+    end
+end
+
 properties
-    n = zeros(1, 3);
+    n
 end
 end
