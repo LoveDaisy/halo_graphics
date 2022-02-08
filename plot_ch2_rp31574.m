@@ -1,4 +1,7 @@
-clear all; close all; clc;
+clear; close all; clc;
+
+figure_size = [400, 300];
+size_factor = 1;
 
 % Style for crystals
 crystal_style = {'FaceColor', 'w', 'FaceAlpha', 0.6, 'LineWidth', 2, 'EdgeColor', 'k'};
@@ -21,9 +24,11 @@ expand_ray_style = {'LineWidth', 1.3, 'Color', expand_ray_color, 'ArrowScale', a
 ray_pts_style = {'PointScale', point_scale, 'FaceColor', ray_color};
 expand_ray_pts_style = {'PointScale', point_scale, 'FaceColor', expand_ray_color};
 
+% Make crystal
 crystal_h = 2;
 crystal = optics.make_prism_crystal(crystal_h);
 
+% Trace a ray
 raypath = [3, 1, 5, 7, 4];
 p0 = [.3, .00, .20, .5] * crystal.vtx(crystal.face{raypath(1)}, :);
 r0 = optics.normalize_vector([-0.85, 0.65, 1.6]);
@@ -31,7 +36,9 @@ ray_trace_res = optics.trace_ray(p0, r0, crystal, raypath);
 raypath_pts = [p0 - r0; ray_trace_res(:, 1:3); ray_trace_res(end, 1:3) + ray_trace_res(end, 4:6)];
 expand_raypath_pts = raypath_pts;
 
-c0 = object.makePrismCrystal(crystal_h);
+%%
+% Start compose figures
+c0 = object.Patch(crystal.vtx, crystal.face);
 c0.setDrawArgs(crystal_style{:});
 
 fig_all = object.ComplexObj(c0);
@@ -82,6 +89,10 @@ ray_pts = object.Point(expand_raypath_pts(4:end-1, :));
 ray_pts.setDrawArgs(expand_ray_pts_style{:});
 fig_all.addObj(ray_pts);
 
+ray_pts = object.Point(expand_raypath_pts(2:end-1, :));
+ray_pts.setDrawArgs(ray_pts_style{:});
+fig_expand_hit_face.addObj(ray_pts);
+
 curr_line = object.ArrowLine(expand_raypath_pts(2:end-1, :));
 curr_line.setDrawArgs(ray_style{:});
 fig_expand_hit_face.addObj(curr_line);
@@ -94,21 +105,22 @@ fig_mirror_face.applyTransform(final_t);
 fig_expand_hit_face.applyTransform(final_t);
 
 %%
+fig_args = {'Color', 'w', 'Position', [0, 400, figure_size]};
 axes_args = {'Position', [0, 0, 1, 1], 'Projection', 'Perspective', ...
     'CameraPosition', [cosd(50), sind(50), 0.2] * 15, 'CameraTarget', [-1, 0.38, -0.65], ...
     'CameraViewAngle', 12, 'Visible', 'off', 'DataAspectRatio', [1, 1, 1], 'PlotBoxAspectRatio', [3, 4, 4]};
 
 figure(1); clf;
-set(gcf, 'Color', 'w');
+set(gcf, fig_args{:});
 fig_all.draw();
 set(gca, axes_args{:});
 
 figure(2); clf;
-set(gcf, 'Color', 'w');
+set(gcf, fig_args{:});
 fig_mirror_face.draw();
 set(gca, axes_args{:});
 
 figure(3); clf;
-set(gcf, 'Color', 'w');
+set(gcf, fig_args{:});
 fig_expand_hit_face.draw();
 set(gca, axes_args{:});
