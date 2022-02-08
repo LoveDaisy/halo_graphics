@@ -42,13 +42,22 @@ methods
                 line_args{i} = 'Color';
             end
         end
-        n = size(obj.faces, 1);
-        for i = 1:n
+        face_num = size(obj.faces, 1);
+        vtx_num = size(obj.vtx, 1);
+        edge_finish = false(vtx_num, vtx_num);
+        for i = 1:face_num
             m = sum(~isnan(obj.faces(i, :)));
             for j = 1:m
-                v1 = vtx(obj.faces(i, j), :);
-                v2 = vtx(obj.faces(i, mod(j, m) + 1), :);
+                i1 = obj.faces(i, j);
+                i2 = obj.faces(i, mod(j, m) + 1);
+                if edge_finish(i1, i2)
+                    continue;
+                end
+                v1 = vtx(i1, :);
+                v2 = vtx(i2, :);
                 plot3([v1(1), v2(1)], [v1(2), v2(2)], [v1(3), v2(3)], line_args{:});
+                edge_finish(i1, i2) = true;
+                edge_finish(i2, i1) = true;
             end
         end
         

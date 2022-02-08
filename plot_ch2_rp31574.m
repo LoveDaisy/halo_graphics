@@ -1,26 +1,27 @@
 clear; close all; clc;
 
-figure_size = [400, 300];
-size_factor = 1;
+figure_size = [600, 450] * 0.9;
+size_factor = 1.7;
 
 % Style for crystals
-crystal_style = {'FaceColor', 'w', 'FaceAlpha', 0.6, 'LineWidth', 2, 'EdgeColor', 'k'};
+crystal_style = {'FaceColor', 'w', 'FaceAlpha', 0.8, 'LineWidth', 2 * size_factor, 'EdgeColor', 'k'};
 expand_crystal_style = {'FaceColor', 'w', 'FaceAlpha', 0.6, 'LineStyle', ':', ...
-    'LineWidth', 1, 'EdgeColor', 'k'};
-hit_crystal_style = {'FaceColor', 'none', 'LineWidth', 1, 'LineStyle', ':', 'EdgeColor', [1, 1, 1] * 0.7};
+    'LineWidth', 1 * size_factor, 'EdgeColor', [1, 1, 1] * 0.5};
+hit_crystal_style = {'FaceColor', 'none', 'LineWidth', 1 * size_factor, 'LineStyle', ':', ...
+    'EdgeColor', [1, 1, 1] * 0.5};
 
 % Style for faces
 mirror_face_style = {'FaceColor', [1, 1, 1] * 0.1, 'EdgeColor', 'none'};
 hit_face_style = {'FaceColor', [255, 252, 180]/255, 'FaceAlpha', 0.75, 'LineStyle', '-', ...
-    'LineWidth', 1.2, 'EdgeColor', 'k'};
+    'LineWidth', 1.2 * size_factor, 'EdgeColor', 'k'};
 
 % Style for rays
 arrow_scale = 0.2;
-point_scale = 0.02;
+point_scale = 0.018;
 ray_color = [252, 93, 83]/255;
 expand_ray_color = 'b';
-ray_style = {'LineWidth', 2, 'Color', ray_color, 'ArrowScale', arrow_scale};
-expand_ray_style = {'LineWidth', 1.3, 'Color', expand_ray_color, 'ArrowScale', arrow_scale};
+ray_style = {'LineWidth', 2 * size_factor, 'Color', ray_color, 'ArrowScale', arrow_scale};
+expand_ray_style = {'LineWidth', 1.3 * size_factor, 'Color', expand_ray_color, 'ArrowScale', arrow_scale};
 ray_pts_style = {'PointScale', point_scale, 'FaceColor', ray_color};
 expand_ray_pts_style = {'PointScale', point_scale, 'FaceColor', expand_ray_color};
 
@@ -105,7 +106,7 @@ fig_mirror_face.applyTransform(final_t);
 fig_expand_hit_face.applyTransform(final_t);
 
 %%
-fig_args = {'Color', 'w', 'Position', [0, 400, figure_size]};
+fig_args = {'Color', 'w', 'Position', [0, 400, figure_size * size_factor]};
 axes_args = {'Position', [0, 0, 1, 1], 'Projection', 'Perspective', ...
     'CameraPosition', [cosd(50), sind(50), 0.2] * 15, 'CameraTarget', [-1, 0.38, -0.65], ...
     'CameraViewAngle', 12, 'Visible', 'off', 'DataAspectRatio', [1, 1, 1], 'PlotBoxAspectRatio', [3, 4, 4]};
