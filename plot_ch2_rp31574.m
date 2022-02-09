@@ -20,10 +20,10 @@ arrow_scale = 0.2;
 point_scale = 0.018;
 ray_color = [252, 93, 83]/255;
 expand_ray_color = 'b';
-ray_style = {'LineWidth', 2 * size_factor, 'Color', ray_color, 'ArrowScale', arrow_scale};
-expand_ray_style = {'LineWidth', 1.3 * size_factor, 'Color', expand_ray_color, 'ArrowScale', arrow_scale};
-ray_pts_style = {'PointScale', point_scale, 'FaceColor', ray_color};
-expand_ray_pts_style = {'PointScale', point_scale, 'FaceColor', expand_ray_color};
+ray_style = {'LineWidth', 2 * size_factor, 'Color', ray_color, 'ArrowScale', arrow_scale, ...
+    'PointScale', point_scale};
+expand_ray_style = {'LineWidth', 1.5 * size_factor, 'LineStyle', ':', 'Color', expand_ray_color, ...
+    'ArrowScale', arrow_scale, 'PointScale', point_scale};
 
 % Make crystal
 crystal_h = 2;
@@ -43,85 +43,174 @@ c0 = object.Patch(crystal.vtx, crystal.face);
 c0.setDrawArgs(crystal_style{:});
 
 fig_all = object.ComplexObj(c0);
-fig_mirror_face = object.ComplexObj;
-fig_expand_hit_face = object.ComplexObj;
 
-curr_face = c0.getPatch(raypath(1));
-curr_face.setDrawArgs(hit_face_style{:});
-fig_expand_hit_face.addObj(curr_face);
-
-curr_c = c0;
-for i = 2:length(raypath)-1
-    curr_fid = raypath(i);
-    curr_t = transform.MirrorReflection(curr_c.getFaceNormal(curr_fid), ...
-        mean(curr_c.getFaceVertices(curr_fid)));
-    curr_c.applyTransform(curr_t);
-    curr_c.setDrawArgs(expand_crystal_style{:});
-    fig_all.addObj(curr_c);
-    
-    curr_mirror_face = curr_c.getPatch(curr_fid);
-    curr_mirror_face.setDrawArgs(mirror_face_style{:});
-    fig_mirror_face.addObj(curr_mirror_face);
-    
-    curr_mirror_face.setDrawArgs(hit_face_style{:});
-    fig_expand_hit_face.addObj(curr_mirror_face);
-    curr_c.setDrawArgs(hit_crystal_style{:});
-    fig_expand_hit_face.addObj(curr_c);
-    
-    expand_raypath_pts(i+1:end, :) = curr_t.transform(expand_raypath_pts(i+1:end, :));
-end
-curr_face = curr_c.getPatch(raypath(end));
-curr_face.setDrawArgs(hit_face_style{:});
-fig_expand_hit_face.addObj(curr_face);
-
-curr_line = object.ArrowLine(raypath_pts, 'EndArrow', 1.02, 'StartArrow', 0.5);
+curr_line = object.ArrowLine(raypath_pts, 'EndArrow', 1.05, 'StartArrow', 0.5);
 curr_line.setDrawArgs(ray_style{:});
 fig_all.addObj(curr_line);
 
-curr_line = object.ArrowLine(expand_raypath_pts(3:end, :), 'EndArrow', 1.02);
+clear curr_*
+
+%%
+% Make final transformation
+final_t = transform.Rotation('from', [0, 0, -1], 'to', [1, 0, 0]);
+fig_all.previewTransform(final_t);
+
+fig_args = {'Color', 'w', 'Position', [0, 400, figure_size * size_factor]};
+axes_args = {'Position', [0, 0, 1, 1], 'Projection', 'Perspective', ...
+    'CameraPosition', [cosd(50), sind(50), 0.2] * 15 + [-1, 0.38, -0.65], 'CameraTarget', [0, 0, 0], ...
+    'CameraViewAngle', 15, 'Visible', 'off', 'DataAspectRatio', [1, 1, 1], 'PlotBoxAspectRatio', [3, 4, 4]};
+
+%%
+dt = 0.05;
+% Move
+figure(1); clf;
+set(gcf, fig_args{:});
+for t = 0:dt:1
+    fig_all.draw();
+    axes_args{6} = [cosd(50 + 40 * t), sind(50 + 40 * t), 0.2] * 15 + [-1*t, 0, 0];
+    axes_args{8} = [-1*t, 0, 0];
+    set(gca, axes_args{:});
+    drawnow;
+end
+
+%%
+% Reflect
+curr_c = c0;
+i=2;
+curr_fid = raypath(i);
+refl_t = transform.MirrorReflection(curr_c.getFaceNormal(curr_fid), ...
+    mean(curr_c.getFaceVertices(curr_fid)));
+curr_t = transform.BlendTransform(refl_t, transform.Translation);
+
+curr_c.setDrawArgs(expand_crystal_style{:});
+fig_all.addObj(curr_c);
+
+curr_line = object.ArrowLine(expand_raypath_pts(3:end, :), 'EndArrow', 1.05);
 curr_line.setDrawArgs(expand_ray_style{:});
 fig_all.addObj(curr_line);
 
-ray_pts = object.Point(raypath_pts(2:end-1, :));
-ray_pts.setDrawArgs(ray_pts_style{:});
-fig_all.addObj(ray_pts);
+for t = 0:dt:1
+    curr_t.setWeights([t, 1-t]);
+    figure(1); clf;
+    fig_all.objects{end-1}.resetTransform();
+    fig_all.objects{end-1}.previewTransform(curr_t);
+    fig_all.objects{end}.resetTransform();
+    fig_all.objects{end}.previewTransform(curr_t);
+    fig_all.draw();
+    set(gca, axes_args{:});
+    drawnow;
+end
 
-ray_pts = object.Point(expand_raypath_pts(4:end-1, :));
-ray_pts.setDrawArgs(expand_ray_pts_style{:});
-fig_all.addObj(ray_pts);
-
-ray_pts = object.Point(expand_raypath_pts(2:end-1, :));
-ray_pts.setDrawArgs(ray_pts_style{:});
-fig_expand_hit_face.addObj(ray_pts);
-
-curr_line = object.ArrowLine(expand_raypath_pts(2:end-1, :));
-curr_line.setDrawArgs(ray_style{:});
-fig_expand_hit_face.addObj(curr_line);
-clear curr_* c0
-
-% Make final transformation
-final_t = transform.Rotation('from', [0, 0, -1], 'to', [1, 0, 0]);
-fig_all.applyTransform(final_t);
-fig_mirror_face.applyTransform(final_t);
-fig_expand_hit_face.applyTransform(final_t);
+curr_c.applyTransform(refl_t);
+expand_raypath_pts(i+1:end, :) = refl_t.transform(expand_raypath_pts(i+1:end, :));
 
 %%
-fig_args = {'Color', 'w', 'Position', [0, 400, figure_size * size_factor]};
-axes_args = {'Position', [0, 0, 1, 1], 'Projection', 'Perspective', ...
-    'CameraPosition', [cosd(50), sind(50), 0.2] * 15, 'CameraTarget', [-1, 0.38, -0.65], ...
-    'CameraViewAngle', 12, 'Visible', 'off', 'DataAspectRatio', [1, 1, 1], 'PlotBoxAspectRatio', [3, 4, 4]};
-
+% Move
 figure(1); clf;
 set(gcf, fig_args{:});
-fig_all.draw();
-set(gca, axes_args{:});
+for t = 0:dt:1
+    fig_all.draw();
+    axes_args{6} = [cosd(90 + 90 * t), sind(90 + 90 * t), 0.2 - 0.2 * t] * 15 + ...
+        [-1, 3/8*t, -sqrt(3)/8*t];
+    axes_args{8} = [-1, 3/8*t, -sqrt(3)/8*t];
+    set(gca, axes_args{:});
+    drawnow;
+end
 
-figure(2); clf;
-set(gcf, fig_args{:});
-fig_mirror_face.draw();
-set(gca, axes_args{:});
+%%
+% Reflet
+fig_all.objects = fig_all.objects(1:end-1);
+curr_line = object.ArrowLine(expand_raypath_pts(3:4, :));
+curr_line.setDrawArgs(expand_ray_style{:});
+fig_all.addObj(curr_line);
+i = 3;
+curr_fid = raypath(i);
+refl_t = transform.MirrorReflection(curr_c.getFaceNormal(curr_fid), ...
+    mean(curr_c.getFaceVertices(curr_fid)));
+curr_t = transform.BlendTransform(refl_t, transform.Translation);
 
-figure(3); clf;
+curr_c.setDrawArgs(expand_crystal_style{:});
+fig_all.addObj(curr_c);
+
+curr_line = object.ArrowLine(expand_raypath_pts(4:end, :), 'EndArrow', 1.05);
+curr_line.setDrawArgs(expand_ray_style{:});
+fig_all.addObj(curr_line);
+
+for t = 0:dt:1
+    curr_t.setWeights([t, 1-t]);
+    figure(1); clf;
+    fig_all.objects{end-1}.resetTransform();
+    fig_all.objects{end-1}.previewTransform(curr_t);
+    fig_all.objects{end}.resetTransform();
+    fig_all.objects{end}.previewTransform(curr_t);
+    fig_all.draw();
+    set(gca, axes_args{:});
+    drawnow;
+end
+
+curr_c.applyTransform(refl_t);
+expand_raypath_pts(i+1:end, :) = refl_t.transform(expand_raypath_pts(i+1:end, :));
+
+%%
+% Move
+figure(1); clf;
 set(gcf, fig_args{:});
-fig_expand_hit_face.draw();
-set(gca, axes_args{:});
+for t = 0:dt:1
+    fig_all.draw();
+    axes_args{6} = [cosd(180), sind(180), 0] * 15 + [-1, 3/8+(-3/8+3/4)*t, -sqrt(3)/8+(sqrt(3)/8-sqrt(3)/2)*t];
+    axes_args{8} = [-1, 3/8+(-3/8+3/4)*t, -sqrt(3)/8+(sqrt(3)/8-sqrt(3)/2)*t];
+    set(gca, axes_args{:});
+    drawnow;
+end
+
+%%
+% Reflet
+fig_all.objects = fig_all.objects(1:end-1);
+curr_line = object.ArrowLine(expand_raypath_pts(4:5, :));
+curr_line.setDrawArgs(expand_ray_style{:});
+fig_all.addObj(curr_line);
+i = 4;
+curr_fid = raypath(i);
+refl_t = transform.MirrorReflection(curr_c.getFaceNormal(curr_fid), ...
+    mean(curr_c.getFaceVertices(curr_fid)));
+curr_t = transform.BlendTransform(refl_t, transform.Translation);
+
+curr_c.setDrawArgs(expand_crystal_style{:});
+fig_all.addObj(curr_c);
+
+curr_line = object.ArrowLine(expand_raypath_pts(5:end, :), 'EndArrow', 1.05);
+curr_line.setDrawArgs(expand_ray_style{:});
+fig_all.addObj(curr_line);
+
+for t = 0:dt:1
+    curr_t.setWeights([t, 1-t]);
+    figure(1); clf;
+    fig_all.objects{end-1}.resetTransform();
+    fig_all.objects{end-1}.previewTransform(curr_t);
+    fig_all.objects{end}.resetTransform();
+    fig_all.objects{end}.previewTransform(curr_t);
+    fig_all.draw();
+    set(gca, axes_args{:});
+    drawnow;
+end
+
+curr_c.applyTransform(refl_t);
+expand_raypath_pts(i+1:end, :) = refl_t.transform(expand_raypath_pts(i+1:end, :));
+
+fig_all.objects = fig_all.objects([1, 2, 3, 5, 7]);
+curr_line = object.ArrowLine(expand_raypath_pts(3:end, :), 'EndArrow', 1.05);
+curr_line.setDrawArgs(expand_ray_style{:});
+fig_all.addObj(curr_line);
+
+%%
+% Move
+figure(1); clf;
+set(gcf, fig_args{:});
+for t = 0:dt:1
+    fig_all.draw();
+    axes_args{6} = [cosd(180-130*t), sind(180-130*t), 0.2*t] * 15 + ...
+        [-1, 3/4+(-3/4+0.4)*t, -sqrt(3)/2+(sqrt(3)/2-0.7)*t];
+    axes_args{8} = [-1, 3/4+(-3/4+0.4)*t, -sqrt(3)/2+(sqrt(3)/2-0.7)*t];
+    set(gca, axes_args{:});
+    drawnow;
+end
