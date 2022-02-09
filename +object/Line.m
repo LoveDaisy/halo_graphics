@@ -20,10 +20,6 @@ methods
             varargin{:});
     end
     
-    function applyTransform(obj, t)
-        obj.vtx = t.transform(obj.vtx);
-    end
-    
     function new_obj = makeCopy(obj)
         new_obj = object.Line;
         new_obj.copyFrom(obj);

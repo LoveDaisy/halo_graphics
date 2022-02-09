@@ -32,6 +32,15 @@ methods
         new_obj = object.ComplexObj;
         new_obj.copyFrom(obj);
     end
+
+    function applyTransform(obj)
+        t = transform.CompositeTransform(obj.scale, obj.rotation, obj.translation, obj.other_transforms);
+        for i = 1:length(obj.objects)
+            obj.objects{i}.previewTransform(t);
+            obj.objects{i}.applyTransform();
+        end
+        obj.resetTransform();
+    end
     
     % ========== Other public methods ==========
     function addObj(obj, other_obj)

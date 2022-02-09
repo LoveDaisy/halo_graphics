@@ -31,10 +31,6 @@ methods
         surf(xx, yy, zz, args{:});
     end
     
-    function applyTransform(obj, t)
-        obj.vtx = t.transform(obj.vtx);
-    end
-    
     function new_obj = makeCopy(obj)
         new_obj = object.Surface;
         new_obj.copyFrom(obj);

@@ -20,7 +20,7 @@ methods
         args = cat(1, obj.draw_args(:), varargin(:), {'EdgeColor'; 'none'});
         surf_args = object.Graphics3DObj.filterArgs(args, {'PointScale'});
 
-        % Set arrow scale
+        % Set point scale
         scale_set = false;
         for i = 1:2:length(args)
             if strcmpi(args{i}, 'PointScale')
@@ -42,10 +42,6 @@ methods
             obj.sphere_obj.draw(surf_args{:});
         end
         set(gca, 'NextPlot', next_plot);
-    end
-    
-    function applyTransform(obj, t)
-        obj.vtx = t.transform(obj.vtx);
     end
     
     function new_obj = makeCopy(obj)

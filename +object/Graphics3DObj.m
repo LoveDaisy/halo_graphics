@@ -10,7 +10,7 @@ methods
         obj.draw_args = varargin;
     end
     
-    function applyTransform(obj, t)
+    function previewTransform(obj, t)
         class_t = class(t);
         if strcmpi(class_t, 'transform.Scale')
             obj.scale.merge(t);
@@ -21,6 +21,21 @@ methods
         else
             obj.other_transforms.merge(t);
         end
+    end
+
+    function applyTransform(obj, t)
+        if nargin == 1
+            t = transform.CompositeTransform(obj.scale, obj.rotation, obj.translation, obj.other_transforms);
+        end
+        obj.vtx = t.transform(obj.vtx);
+        obj.resetTransform();
+    end
+    
+    function resetTransform(obj)
+        obj.rotation = transform.Rotation;
+        obj.scale = transform.Scale;
+        obj.translation = transform.Translation;
+        obj.other_transforms = transform.CompositeTransform;
     end
 end
 

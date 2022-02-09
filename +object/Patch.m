@@ -64,10 +64,6 @@ methods
         set(gca, 'NextPlot', next_plot);
     end
     
-    function applyTransform(obj, t)
-        obj.vtx = t.transform(obj.vtx);
-    end
-    
     function new_obj = makeCopy(obj)
         new_obj = object.Patch;
         new_obj.copyFrom(obj);
