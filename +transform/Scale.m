@@ -16,6 +16,10 @@ end
 
 methods
     function obj = Scale(varargin)
+        obj.s = 1;
+        if isempty(varargin)
+            return;
+        end
         p = inputParser;
         p.addOptional('s', 1, @(x) validateattributes(x, {'numeric'}, {'scalar', 'real'}));
         p.parse(varargin{:});

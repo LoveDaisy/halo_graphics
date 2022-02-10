@@ -61,7 +61,7 @@ axes_args = {'Position', [0, 0, 1, 1], 'Projection', 'Perspective', ...
     'CameraViewAngle', 15, 'Visible', 'off', 'DataAspectRatio', [1, 1, 1], 'PlotBoxAspectRatio', [3, 4, 4]};
 
 %%
-dt = 0.05;
+dt = 0.1;
 % Move
 figure(1); clf;
 set(gcf, fig_args{:});

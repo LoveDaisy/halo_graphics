@@ -13,9 +13,14 @@ end
 
 methods
     function obj = MirrorReflection(varargin)
+        obj.n = zeros(1, 3);
+        obj.p = zeros(1, 3);
+        if isempty(varargin)
+            return;
+        end
         p = inputParser;
-        p.addOptional('normal', zeros(3, 1), @(x) validateattributes(x, {'numeric'}, {'vector', 'numel', 3}));
-        p.addOptional('p0', zeros(3, 1), @(x) validateattributes(x, {'numeric'}, {'vector', 'numel', 3}));
+        p.addOptional('normal', zeros(1, 3), @(x) validateattributes(x, {'numeric'}, {'vector', 'numel', 3}));
+        p.addOptional('p0', zeros(1, 3), @(x) validateattributes(x, {'numeric'}, {'vector', 'numel', 3}));
         p.parse(varargin{:});
 
         obj.n = p.Results.normal(:)';

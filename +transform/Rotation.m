@@ -16,6 +16,10 @@ end
 
 methods
     function obj = Rotation(varargin)
+        obj.matt = eye(3);
+        if isempty(varargin)
+            return;
+        end
         p = inputParser;
         p.addParameter('from', zeros(3, 1), @(x) validateattributes(x, {'numeric'}, {'vector', 'numel', 3}));
         p.addParameter('to', zeros(3, 1), @(x) validateattributes(x, {'numeric'}, {'vector', 'numel', 3}));
