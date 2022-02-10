@@ -68,11 +68,13 @@ cam = camera.Camera(axes_args{:});
 % Move
 figure(1); clf;
 set(gcf, fig_args{:});
-
 cam.render(fig_all);
-for t = 0:dt:1
-    cam.cam_pos = [cosd(50 + 40 * t), sind(50 + 40 * t), 0.2] * 15 + [-1*t, 0, 0];
-    cam.cam_target = [-1*t, 0, 0];
+
+anim.reset();
+anim.setTickStep(dt);
+anim.addAction(@cam.setCamPose, [50, 0.2, 15, 0, 0, 0], [90, 0.2, 15, -1, 0, 0]);
+while ~anim.finished()
+    anim.tick();
     cam.update();
     drawnow;
 end
@@ -117,10 +119,11 @@ figure(1); clf;
 set(gcf, fig_args{:});
 cam.render(fig_all);
 
-for t = 0:dt:1
-    cam.cam_pos = [cosd(90 + 90 * t), sind(90 + 90 * t), 0.2 - 0.2 * t] * 15 + ...
-        [-1, 3/8*t, -sqrt(3)/8*t];
-    cam.cam_target = [-1, 3/8*t, -sqrt(3)/8*t];
+anim.reset();
+anim.setTickStep(dt);
+anim.addAction(@cam.setCamPose, [90, 0.2, 15, -1, 0, 0], [180, 0, 15, -1, 3/8, -sqrt(3)/8]);
+while ~anim.finished()
+    anim.tick();
     cam.update();
     drawnow;
 end
@@ -169,9 +172,11 @@ figure(1); clf;
 set(gcf, fig_args{:});
 cam.render(fig_all);
 
-for t = 0:dt:1
-    cam.cam_pos = [cosd(180), sind(180), 0] * 15 + [-1, 3/8+(-3/8+3/4)*t, -sqrt(3)/8+(sqrt(3)/8-sqrt(3)/2)*t];
-    cam.cam_target = [-1, 3/8+(-3/8+3/4)*t, -sqrt(3)/8+(sqrt(3)/8-sqrt(3)/2)*t];
+anim.reset();
+anim.setTickStep(dt);
+anim.addAction(@cam.setCamPose, [180, 0, 15, -1, 3/8, -sqrt(3)/8], [180, 0, 15, -1, 3/4, -sqrt(3)/2]);
+while ~anim.finished()
+    anim.tick();
     cam.update();
     drawnow;
 end
@@ -221,10 +226,11 @@ figure(1); clf;
 set(gcf, fig_args{:});
 cam.render(fig_all);
 
-for t = 0:dt:1
-    cam.cam_pos = [cosd(180-130*t), sind(180-130*t), 0.2*t] * 15 + ...
-        [-1, 3/4+(-3/4+0.4)*t, -sqrt(3)/2+(sqrt(3)/2-0.7)*t];
-    cam.cam_target = [-1, 3/4+(-3/4+0.4)*t, -sqrt(3)/2+(sqrt(3)/2-0.7)*t];
+anim.reset();
+anim.setTickStep(dt);
+anim.addAction(@cam.setCamPose, [180, 0, 15, -1, 3/4, -sqrt(3)/2], [50, 0.2, 15, -1, 0.4, -0.7]);
+while ~anim.finished()
+    anim.tick();
     cam.update();
     drawnow;
 end

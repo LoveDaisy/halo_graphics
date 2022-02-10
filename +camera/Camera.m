@@ -8,7 +8,6 @@ methods
         
         obj.cam_pos = [];
         obj.cam_target = [];
-        obj.cam_view_angle = [];
         obj.other_axes_args = {};
         
         unused_idx = false(1, arg_num);
@@ -17,8 +16,6 @@ methods
                 obj.cam_pos = varargin{i+1};
             elseif strcmpi(varargin{i}, 'CameraTarget')
                 obj.cam_target = varargin{i+1};
-            elseif strcmpi(varargin{i}, 'CameraViewAngle')
-                obj.cam_view_angle = varargin{i+1};
             else
                 unused_idx(i:i+1) = true;
             end
@@ -40,19 +37,30 @@ methods
         end
         if ~isempty(obj.cam_target)
             axes_args(idx:idx+1) = {'CameraTarget', obj.cam_target};
-            idx = idx + 2;
         end
-        if ~isempty(obj.cam_view_angle)
-            axes_args(idx:idx+1) = {'CameraViewAngle', obj.cam_view_angle};
-        end
+
         set(gca, axes_args{:}, obj.other_axes_args{:});
+    end
+    
+    function setCamPosition(obj, p)
+        obj.cam_pos = p;
+    end
+    
+    function setCamPose(obj, p)
+        % [lon, h, r, target_xyz]
+        pos = [cosd(p(1)), sind(p(1)), p(2)] * p(3) + p(4:6);
+        obj.cam_pos = pos;
+        obj.cam_target = p(4:6);
+    end
+    
+    function setCamTarget(obj, t)
+        obj.cam_target = t;
     end
 end
 
-properties
+properties (Access = protected)
     cam_pos;
     cam_target;
-    cam_view_angle;
     other_axes_args;
 end
 end
