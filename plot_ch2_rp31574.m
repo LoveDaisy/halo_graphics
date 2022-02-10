@@ -63,14 +63,17 @@ axes_args = {'Position', [0, 0, 1, 1], 'Projection', 'Perspective', ...
 %%
 dt = 0.05;
 anim = animate.SimpleSmoothAnimate;
+cam = camera.Camera(axes_args{:});
+
 % Move
 figure(1); clf;
 set(gcf, fig_args{:});
+
+cam.render(fig_all);
 for t = 0:dt:1
-    fig_all.draw();
-    axes_args{6} = [cosd(50 + 40 * t), sind(50 + 40 * t), 0.2] * 15 + [-1*t, 0, 0];
-    axes_args{8} = [-1*t, 0, 0];
-    set(gca, axes_args{:});
+    cam.cam_pos = [cosd(50 + 40 * t), sind(50 + 40 * t), 0.2] * 15 + [-1*t, 0, 0];
+    cam.cam_target = [-1*t, 0, 0];
+    cam.update();
     drawnow;
 end
 
@@ -96,8 +99,7 @@ anim.addAction(@(t) fig_all.objects{end}.dynamicTransform(t), transform.Translat
 while ~anim.finished()
     anim.tick();
     figure(1); clf;
-    fig_all.draw();
-    set(gca, axes_args{:});
+    cam.render(fig_all);
     drawnow;
 end
 
@@ -113,12 +115,13 @@ fig_all.addObj(curr_line);
 % Move
 figure(1); clf;
 set(gcf, fig_args{:});
+cam.render(fig_all);
+
 for t = 0:dt:1
-    fig_all.draw();
-    axes_args{6} = [cosd(90 + 90 * t), sind(90 + 90 * t), 0.2 - 0.2 * t] * 15 + ...
+    cam.cam_pos = [cosd(90 + 90 * t), sind(90 + 90 * t), 0.2 - 0.2 * t] * 15 + ...
         [-1, 3/8*t, -sqrt(3)/8*t];
-    axes_args{8} = [-1, 3/8*t, -sqrt(3)/8*t];
-    set(gca, axes_args{:});
+    cam.cam_target = [-1, 3/8*t, -sqrt(3)/8*t];
+    cam.update();
     drawnow;
 end
 
@@ -148,8 +151,7 @@ anim.addAction(@(t) fig_all.objects{end}.dynamicTransform(t), transform.Translat
 while ~anim.finished()
     anim.tick();
     figure(1); clf;
-    fig_all.draw();
-    set(gca, axes_args{:});
+    cam.render(fig_all);
     drawnow;
 end
 
@@ -165,11 +167,12 @@ fig_all.addObj(curr_line);
 % Move
 figure(1); clf;
 set(gcf, fig_args{:});
+cam.render(fig_all);
+
 for t = 0:dt:1
-    fig_all.draw();
-    axes_args{6} = [cosd(180), sind(180), 0] * 15 + [-1, 3/8+(-3/8+3/4)*t, -sqrt(3)/8+(sqrt(3)/8-sqrt(3)/2)*t];
-    axes_args{8} = [-1, 3/8+(-3/8+3/4)*t, -sqrt(3)/8+(sqrt(3)/8-sqrt(3)/2)*t];
-    set(gca, axes_args{:});
+    cam.cam_pos = [cosd(180), sind(180), 0] * 15 + [-1, 3/8+(-3/8+3/4)*t, -sqrt(3)/8+(sqrt(3)/8-sqrt(3)/2)*t];
+    cam.cam_target = [-1, 3/8+(-3/8+3/4)*t, -sqrt(3)/8+(sqrt(3)/8-sqrt(3)/2)*t];
+    cam.update();
     drawnow;
 end
 
@@ -199,8 +202,7 @@ anim.addAction(@(t) fig_all.objects{end}.dynamicTransform(t), transform.Translat
 while ~anim.finished()
     anim.tick();
     figure(1); clf;
-    fig_all.draw();
-    set(gca, axes_args{:});
+    cam.render(fig_all);
     drawnow;
 end
 
@@ -217,11 +219,12 @@ fig_all.addObj(curr_line);
 % Move
 figure(1); clf;
 set(gcf, fig_args{:});
+cam.render(fig_all);
+
 for t = 0:dt:1
-    fig_all.draw();
-    axes_args{6} = [cosd(180-130*t), sind(180-130*t), 0.2*t] * 15 + ...
+    cam.cam_pos = [cosd(180-130*t), sind(180-130*t), 0.2*t] * 15 + ...
         [-1, 3/4+(-3/4+0.4)*t, -sqrt(3)/2+(sqrt(3)/2-0.7)*t];
-    axes_args{8} = [-1, 3/4+(-3/4+0.4)*t, -sqrt(3)/2+(sqrt(3)/2-0.7)*t];
-    set(gca, axes_args{:});
+    cam.cam_target = [-1, 3/4+(-3/4+0.4)*t, -sqrt(3)/2+(sqrt(3)/2-0.7)*t];
+    cam.update();
     drawnow;
 end
