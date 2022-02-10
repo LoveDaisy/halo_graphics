@@ -45,6 +45,8 @@ methods
         face_num = size(obj.faces, 1);
         vtx_num = size(obj.vtx, 1);
         edge_finish = false(vtx_num, vtx_num);
+        line_pts = nan(face_num * size(obj.faces, 2), 3);
+        idx = 1;
         for i = 1:face_num
             m = sum(~isnan(obj.faces(i, :)));
             for j = 1:m
@@ -55,11 +57,15 @@ methods
                 end
                 v1 = vtx(i1, :);
                 v2 = vtx(i2, :);
-                line([v1(1), v2(1)], [v1(2), v2(2)], [v1(3), v2(3)], line_args{:});
+                line_pts(idx, :) = v1;
+                line_pts(idx+1, :) = v2;
+                idx = idx + 2;
                 edge_finish(i1, i2) = true;
                 edge_finish(i2, i1) = true;
             end
+            idx = idx + 1;
         end
+        line(line_pts(:, 1), line_pts(:, 2), line_pts(:, 3), line_args{:});
         
         set(gca, 'NextPlot', next_plot);
     end

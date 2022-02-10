@@ -22,17 +22,7 @@ end
 
 methods
     function obj = CompositeTransform(varargin)
-        t_num = length(varargin);
-        for i = 1:t_num
-            if ~isa(varargin{i}, 'transform.Transform')
-                error('All arguments must be transform.Transform');
-            end
-        end
-
-        obj.transforms = cell(1, t_num);
-        for i = 1:t_num
-            obj.transforms{i} = varargin{i};
-        end
+        obj.transforms = varargin;
     end
 end
 

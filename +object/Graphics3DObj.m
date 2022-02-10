@@ -127,7 +127,7 @@ methods (Static)
     end
 end
 
-properties (Access = public)
+properties (Access = protected)
     vtx
     rotation
     scale
