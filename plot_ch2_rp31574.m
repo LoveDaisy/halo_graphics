@@ -57,18 +57,20 @@ fig_all.dynamicTransform(final_t);
 
 fig_args = {'Color', 'w', 'Position', [0, 400, figure_size * size_factor]};
 axes_args = {'Position', [0, 0, 1, 1], 'Projection', 'Perspective', ...
-    'CameraPosition', [cosd(50), sind(50), 0.2] * 15 + [-1, 0.38, -0.65], 'CameraTarget', [0, 0, 0], ...
+    'CameraPosition', [cosd(50), sind(50), 0.2] * 15, 'CameraTarget', [0, 0, 0], ...
     'CameraViewAngle', 15, 'Visible', 'off', 'DataAspectRatio', [1, 1, 1], 'PlotBoxAspectRatio', [3, 4, 4]};
 
 %%
 dt = 0.05;
 anim = animate.SimpleSmoothAnimate;
 cam = camera.Camera(axes_args{:});
+output_img_fmt = 'output/%04d.png';
 
 % Move
 figure(1); clf;
 set(gcf, fig_args{:});
 cam.render(fig_all);
+cam.save(output_img_fmt);
 
 anim.reset();
 anim.setTickStep(dt);
@@ -76,6 +78,7 @@ anim.addAction(@cam.setCamPose, [50, 0.2, 15, 0, 0, 0], [90, 0.2, 15, -1, 0, 0])
 while ~anim.finished()
     anim.tick();
     cam.update();
+    cam.save(output_img_fmt);
     drawnow;
 end
 
@@ -102,6 +105,7 @@ while ~anim.finished()
     anim.tick();
     figure(1); clf;
     cam.render(fig_all);
+    cam.save(output_img_fmt);
     drawnow;
 end
 
@@ -118,6 +122,7 @@ fig_all.addObj(curr_line);
 figure(1); clf;
 set(gcf, fig_args{:});
 cam.render(fig_all);
+cam.save(output_img_fmt);
 
 anim.reset();
 anim.setTickStep(dt);
@@ -125,6 +130,7 @@ anim.addAction(@cam.setCamPose, [90, 0.2, 15, -1, 0, 0], [180, 0, 15, -1, 3/8, -
 while ~anim.finished()
     anim.tick();
     cam.update();
+    cam.save(output_img_fmt);
     drawnow;
 end
 
@@ -155,6 +161,7 @@ while ~anim.finished()
     anim.tick();
     figure(1); clf;
     cam.render(fig_all);
+    cam.save(output_img_fmt);
     drawnow;
 end
 
@@ -171,6 +178,7 @@ fig_all.addObj(curr_line);
 figure(1); clf;
 set(gcf, fig_args{:});
 cam.render(fig_all);
+cam.save(output_img_fmt);
 
 anim.reset();
 anim.setTickStep(dt);
@@ -178,6 +186,7 @@ anim.addAction(@cam.setCamPose, [180, 0, 15, -1, 3/8, -sqrt(3)/8], [180, 0, 15, 
 while ~anim.finished()
     anim.tick();
     cam.update();
+    cam.save(output_img_fmt);
     drawnow;
 end
 
@@ -208,6 +217,7 @@ while ~anim.finished()
     anim.tick();
     figure(1); clf;
     cam.render(fig_all);
+    cam.save(output_img_fmt);
     drawnow;
 end
 
@@ -225,6 +235,7 @@ fig_all.addObj(curr_line);
 figure(1); clf;
 set(gcf, fig_args{:});
 cam.render(fig_all);
+cam.save(output_img_fmt);
 
 anim.reset();
 anim.setTickStep(dt);
@@ -232,5 +243,6 @@ anim.addAction(@cam.setCamPose, [180, 0, 15, -1, 3/4, -sqrt(3)/2], [50, 0.2, 15,
 while ~anim.finished()
     anim.tick();
     cam.update();
+    cam.save(output_img_fmt);
     drawnow;
 end

@@ -9,6 +9,7 @@ methods
         obj.cam_pos = [];
         obj.cam_target = [];
         obj.other_axes_args = {};
+        obj.cnt = 0;
         
         unused_idx = false(1, arg_num);
         for i = 1:2:arg_num
@@ -40,6 +41,11 @@ methods
         end
 
         set(gca, axes_args{:}, obj.other_axes_args{:});
+        obj.cnt = obj.cnt + 1;
+    end
+    
+    function save(obj, fmt)
+        saveas(gcf, sprintf(fmt, obj.cnt));
     end
     
     function setCamPosition(obj, p)
@@ -47,7 +53,7 @@ methods
     end
     
     function setCamPose(obj, p)
-        % [lon, h, r, target_xyz]
+        % [lon, h, r_scale, target_xyz]
         pos = [cosd(p(1)), sind(p(1)), p(2)] * p(3) + p(4:6);
         obj.cam_pos = pos;
         obj.cam_target = p(4:6);
@@ -62,5 +68,6 @@ properties (Access = protected)
     cam_pos;
     cam_target;
     other_axes_args;
+    cnt;
 end
 end
