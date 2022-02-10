@@ -82,17 +82,16 @@ refl_t = transform.MirrorReflection(curr_c.getFaceNormal(curr_fid), ...
     mean(curr_c.getFaceVertices(curr_fid)));
 
 curr_c.setDrawArgs(expand_crystal_style{:});
-fig_all.addObj(curr_c);
 
 curr_line = object.ArrowLine(expand_raypath_pts(3:end, :), 'EndArrow', 1.05);
 curr_line.setDrawArgs(expand_ray_style{:});
-fig_all.addObj(curr_line);
+
+refl_obj = object.ComplexObj(curr_c, curr_line);
+fig_all.addObj(refl_obj);
 
 for t = 0:dt:1
     curr_t = transform.BlendTransform(refl_t, t, transform.Translation, 1-t);
     figure(1); clf;
-    fig_all.objects{end-1}.resetTransform();
-    fig_all.objects{end-1}.previewTransform(curr_t);
     fig_all.objects{end}.resetTransform();
     fig_all.objects{end}.previewTransform(curr_t);
     fig_all.draw();
@@ -101,7 +100,12 @@ for t = 0:dt:1
 end
 
 curr_c.applyTransform(refl_t);
+curr_line.applyTransform(refl_t);
 expand_raypath_pts(i+1:end, :) = refl_t.transform(expand_raypath_pts(i+1:end, :));
+
+fig_all.objects = fig_all.objects(1:end-1);
+fig_all.addObj(curr_c);
+fig_all.addObj(curr_line);
 
 %%
 % Move
@@ -122,23 +126,23 @@ fig_all.objects = fig_all.objects(1:end-1);
 curr_line = object.ArrowLine(expand_raypath_pts(3:4, :));
 curr_line.setDrawArgs(expand_ray_style{:});
 fig_all.addObj(curr_line);
+
 i = 3;
 curr_fid = raypath(i);
 refl_t = transform.MirrorReflection(curr_c.getFaceNormal(curr_fid), ...
     mean(curr_c.getFaceVertices(curr_fid)));
 
 curr_c.setDrawArgs(expand_crystal_style{:});
-fig_all.addObj(curr_c);
 
 curr_line = object.ArrowLine(expand_raypath_pts(4:end, :), 'EndArrow', 1.05);
 curr_line.setDrawArgs(expand_ray_style{:});
-fig_all.addObj(curr_line);
+
+refl_obj = object.ComplexObj(curr_c, curr_line);
+fig_all.addObj(refl_obj);
 
 for t = 0:dt:1
     curr_t = transform.BlendTransform(refl_t, t, transform.Translation, 1-t);
     figure(1); clf;
-    fig_all.objects{end-1}.resetTransform();
-    fig_all.objects{end-1}.previewTransform(curr_t);
     fig_all.objects{end}.resetTransform();
     fig_all.objects{end}.previewTransform(curr_t);
     fig_all.draw();
@@ -147,7 +151,12 @@ for t = 0:dt:1
 end
 
 curr_c.applyTransform(refl_t);
+curr_line.applyTransform(refl_t);
 expand_raypath_pts(i+1:end, :) = refl_t.transform(expand_raypath_pts(i+1:end, :));
+
+fig_all.objects = fig_all.objects(1:end-1);
+fig_all.addObj(curr_c);
+fig_all.addObj(curr_line);
 
 %%
 % Move
@@ -167,23 +176,23 @@ fig_all.objects = fig_all.objects(1:end-1);
 curr_line = object.ArrowLine(expand_raypath_pts(4:5, :));
 curr_line.setDrawArgs(expand_ray_style{:});
 fig_all.addObj(curr_line);
+
 i = 4;
 curr_fid = raypath(i);
 refl_t = transform.MirrorReflection(curr_c.getFaceNormal(curr_fid), ...
     mean(curr_c.getFaceVertices(curr_fid)));
 
 curr_c.setDrawArgs(expand_crystal_style{:});
-fig_all.addObj(curr_c);
 
 curr_line = object.ArrowLine(expand_raypath_pts(5:end, :), 'EndArrow', 1.05);
 curr_line.setDrawArgs(expand_ray_style{:});
-fig_all.addObj(curr_line);
+
+refl_obj = object.ComplexObj(curr_c, curr_line);
+fig_all.addObj(refl_obj);
 
 for t = 0:dt:1
     curr_t = transform.BlendTransform(refl_t, t, transform.Translation, 1-t);
     figure(1); clf;
-    fig_all.objects{end-1}.resetTransform();
-    fig_all.objects{end-1}.previewTransform(curr_t);
     fig_all.objects{end}.resetTransform();
     fig_all.objects{end}.previewTransform(curr_t);
     fig_all.draw();
@@ -193,10 +202,11 @@ end
 
 curr_c.applyTransform(refl_t);
 expand_raypath_pts(i+1:end, :) = refl_t.transform(expand_raypath_pts(i+1:end, :));
-
-fig_all.objects = fig_all.objects([1, 2, 3, 5, 7]);
 curr_line = object.ArrowLine(expand_raypath_pts(3:end, :), 'EndArrow', 1.05);
 curr_line.setDrawArgs(expand_ray_style{:});
+
+fig_all.objects = fig_all.objects(1:end-2);
+fig_all.addObj(curr_c);
 fig_all.addObj(curr_line);
 
 %%
