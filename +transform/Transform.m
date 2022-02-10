@@ -12,10 +12,6 @@ methods
         end
         t = transform.CompositeTransform(obj, varargin{:});
     end
-
-    function obj = merge(obj, t)
-        error('This transform cannot be merged!');
-    end
 end
 
 end

@@ -36,8 +36,7 @@ methods
     function applyTransform(obj)
         t = transform.CompositeTransform(obj.scale, obj.rotation, obj.translation, obj.other_transforms);
         for i = 1:length(obj.objects)
-            obj.objects{i}.previewTransform(t);
-            obj.objects{i}.applyTransform();
+            obj.objects{i}.applyTransform(t);
         end
         obj.resetTransform();
     end

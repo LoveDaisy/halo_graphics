@@ -10,16 +10,16 @@ methods
         obj.draw_args = varargin;
     end
     
-    function previewTransform(obj, t)
+    function dynamicTransform(obj, t)
         class_t = class(t);
         if strcmpi(class_t, 'transform.Scale')
-            obj.scale = obj.scale.merge(t);
+            obj.scale = t;
         elseif strcmpi(class_t, 'transform.Rotation')
-            obj.rotation = obj.rotation.merge(t);
+            obj.rotation = t;
         elseif strcmpi(class_t, 'transform.Translation')
-            obj.translation = obj.translation.merge(t);
+            obj.translation = t;
         else
-            obj.other_transforms = obj.other_transforms.merge(t);
+            obj.other_transforms = t;
         end
     end
 

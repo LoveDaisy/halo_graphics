@@ -3,10 +3,6 @@ methods
     function vtx = transform(obj, vtx)
         vtx = bsxfun(@plus, vtx, obj.v);
     end
-
-    function obj = merge(obj, t)
-        obj.v = obj.v + t.v;
-    end
 end
 
 methods

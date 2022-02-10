@@ -3,10 +3,6 @@ methods
     function vtx = transform(obj, vtx)
         vtx = vtx * obj.s;
     end
-
-    function obj = merge(obj, t)
-        obj.s = obj.s * t.s;
-    end
 end
 
 methods

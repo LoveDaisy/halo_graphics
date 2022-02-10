@@ -53,7 +53,7 @@ clear curr_*
 %%
 % Make final transformation
 final_t = transform.Rotation('from', [0, 0, -1], 'to', [1, 0, 0]);
-fig_all.previewTransform(final_t);
+fig_all.dynamicTransform(final_t);
 
 fig_args = {'Color', 'w', 'Position', [0, 400, figure_size * size_factor]};
 axes_args = {'Position', [0, 0, 1, 1], 'Projection', 'Perspective', ...
@@ -92,8 +92,7 @@ fig_all.addObj(refl_obj);
 for t = 0:dt:1
     curr_t = transform.BlendTransform(refl_t, t, transform.Translation, 1-t);
     figure(1); clf;
-    fig_all.objects{end}.resetTransform();
-    fig_all.objects{end}.previewTransform(curr_t);
+    fig_all.objects{end}.dynamicTransform(curr_t);
     fig_all.draw();
     set(gca, axes_args{:});
     drawnow;
@@ -143,8 +142,7 @@ fig_all.addObj(refl_obj);
 for t = 0:dt:1
     curr_t = transform.BlendTransform(refl_t, t, transform.Translation, 1-t);
     figure(1); clf;
-    fig_all.objects{end}.resetTransform();
-    fig_all.objects{end}.previewTransform(curr_t);
+    fig_all.objects{end}.dynamicTransform(curr_t);
     fig_all.draw();
     set(gca, axes_args{:});
     drawnow;
@@ -193,8 +191,7 @@ fig_all.addObj(refl_obj);
 for t = 0:dt:1
     curr_t = transform.BlendTransform(refl_t, t, transform.Translation, 1-t);
     figure(1); clf;
-    fig_all.objects{end}.resetTransform();
-    fig_all.objects{end}.previewTransform(curr_t);
+    fig_all.objects{end}.dynamicTransform(curr_t);
     fig_all.draw();
     set(gca, axes_args{:});
     drawnow;
