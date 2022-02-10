@@ -6,7 +6,7 @@ end
 
 methods (Access = protected)
     function s = parameter(obj)
-        s = obj.t;
+        s = obj.t / obj.duration;
     end
 end
 end

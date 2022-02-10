@@ -6,7 +6,7 @@ end
 
 methods (Access = protected)
     function s = parameter(obj)
-        s = sin(pi * (obj.t - 0.5)) * 0.5 + 0.5;
+        s = sin(pi * (obj.t / obj.duration - 0.5)) * 0.5 + 0.5;
     end
 end
 end

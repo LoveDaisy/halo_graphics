@@ -4,6 +4,7 @@ methods
         obj.actions = {};
         obj.t = 0;
         obj.step = 0.1;
+        obj.duration = 1;
     end
     
     function addAction(obj, action, start_param, end_param)
@@ -13,6 +14,10 @@ methods
     
     function setTickStep(obj, s)
         obj.step = s;
+    end
+    
+    function setDuration(obj, d)
+        obj.duration = d;
     end
     
     function tick(obj)
@@ -34,13 +39,14 @@ methods
     end
     
     function f = finished(obj)
-        f = obj.t >= 1 + obj.step / 2;
+        f = obj.t >= obj.duration + obj.step / 2;
     end
     
     function reset(obj)
         obj.actions = {};
         obj.t = 0;
         obj.step = 0.1;
+        obj.duration = 1;
     end
 end
 
@@ -52,5 +58,6 @@ properties (Access = protected)
     actions
     t
     step
+    duration
 end
 end

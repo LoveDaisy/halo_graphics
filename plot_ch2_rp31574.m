@@ -1,6 +1,6 @@
 clear; close all; clc;
 
-figure_size = [600, 450] * 0.9;
+figure_size = [1920, 1080] * 0.5;
 size_factor = 1.7;
 
 % Style for crystals
@@ -61,24 +61,23 @@ axes_args = {'Position', [0, 0, 1, 1], 'Projection', 'Perspective', ...
     'CameraViewAngle', 15, 'Visible', 'off', 'DataAspectRatio', [1, 1, 1], 'PlotBoxAspectRatio', [3, 4, 4]};
 
 %%
-dt = 0.05;
+dt = 1/60;
 anim = animate.SimpleSmoothAnimate;
 cam = camera.Camera(axes_args{:});
-output_img_fmt = 'output/%04d.png';
+cam.setOutputFmt('output/%04d.png');
 
 % Move
 figure(1); clf;
 set(gcf, fig_args{:});
 cam.render(fig_all);
-cam.save(output_img_fmt);
 
 anim.reset();
 anim.setTickStep(dt);
+anim.setDuration(0.8);
 anim.addAction(@cam.setCamPose, [50, 0.2, 15, 0, 0, 0], [90, 0.2, 15, -1, 0, 0]);
 while ~anim.finished()
     anim.tick();
     cam.update();
-    cam.save(output_img_fmt);
     drawnow;
 end
 
@@ -100,12 +99,12 @@ fig_all.addObj(refl_obj);
 
 anim.reset();
 anim.setTickStep(dt);
+anim.setDuration(2.1);
 anim.addAction(@(t) fig_all.objects{end}.dynamicTransform(t), transform.Translation, refl_t);
 while ~anim.finished()
     anim.tick();
     figure(1); clf;
     cam.render(fig_all);
-    cam.save(output_img_fmt);
     drawnow;
 end
 
@@ -122,15 +121,14 @@ fig_all.addObj(curr_line);
 figure(1); clf;
 set(gcf, fig_args{:});
 cam.render(fig_all);
-cam.save(output_img_fmt);
 
 anim.reset();
 anim.setTickStep(dt);
+anim.setDuration(0.8);
 anim.addAction(@cam.setCamPose, [90, 0.2, 15, -1, 0, 0], [180, 0, 15, -1, 3/8, -sqrt(3)/8]);
 while ~anim.finished()
     anim.tick();
     cam.update();
-    cam.save(output_img_fmt);
     drawnow;
 end
 
@@ -156,12 +154,12 @@ fig_all.addObj(refl_obj);
 
 anim.reset();
 anim.setTickStep(dt);
+anim.setDuration(1.6);
 anim.addAction(@(t) fig_all.objects{end}.dynamicTransform(t), transform.Translation, refl_t);
 while ~anim.finished()
     anim.tick();
     figure(1); clf;
     cam.render(fig_all);
-    cam.save(output_img_fmt);
     drawnow;
 end
 
@@ -178,15 +176,14 @@ fig_all.addObj(curr_line);
 figure(1); clf;
 set(gcf, fig_args{:});
 cam.render(fig_all);
-cam.save(output_img_fmt);
 
 anim.reset();
 anim.setTickStep(dt);
+anim.setDuration(0.8);
 anim.addAction(@cam.setCamPose, [180, 0, 15, -1, 3/8, -sqrt(3)/8], [180, 0, 15, -1, 3/4, -sqrt(3)/2]);
 while ~anim.finished()
     anim.tick();
     cam.update();
-    cam.save(output_img_fmt);
     drawnow;
 end
 
@@ -212,12 +209,12 @@ fig_all.addObj(refl_obj);
 
 anim.reset();
 anim.setTickStep(dt);
+anim.setDuration(1.6);
 anim.addAction(@(t) fig_all.objects{end}.dynamicTransform(t), transform.Translation, refl_t);
 while ~anim.finished()
     anim.tick();
     figure(1); clf;
     cam.render(fig_all);
-    cam.save(output_img_fmt);
     drawnow;
 end
 
@@ -235,14 +232,13 @@ fig_all.addObj(curr_line);
 figure(1); clf;
 set(gcf, fig_args{:});
 cam.render(fig_all);
-cam.save(output_img_fmt);
 
 anim.reset();
 anim.setTickStep(dt);
+anim.setDuration(0.8);
 anim.addAction(@cam.setCamPose, [180, 0, 15, -1, 3/4, -sqrt(3)/2], [50, 0.2, 15, -1, 0.4, -0.7]);
 while ~anim.finished()
     anim.tick();
     cam.update();
-    cam.save(output_img_fmt);
     drawnow;
 end
