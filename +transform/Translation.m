@@ -4,12 +4,7 @@ methods
         vtx = bsxfun(@plus, vtx, obj.v);
     end
 
-    function t = makeCopy(obj)
-        t = transform.Translation;
-        t.copyFrom(obj);
-    end
-
-    function merge(obj, t)
+    function obj = merge(obj, t)
         obj.v = obj.v + t.v;
     end
 end
@@ -25,13 +20,6 @@ methods
         p.parse(varargin{:});
 
         obj.v = p.Results.v(:)';
-    end
-end
-
-methods (Access = protected)
-    function copyFrom(obj, from_obj)
-        obj.copyFrom@transform.Transform(from_obj);
-        obj.v = from_obj.v;
     end
 end
 

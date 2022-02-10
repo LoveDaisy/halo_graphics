@@ -80,7 +80,6 @@ i=2;
 curr_fid = raypath(i);
 refl_t = transform.MirrorReflection(curr_c.getFaceNormal(curr_fid), ...
     mean(curr_c.getFaceVertices(curr_fid)));
-curr_t = transform.BlendTransform(refl_t, transform.Translation);
 
 curr_c.setDrawArgs(expand_crystal_style{:});
 fig_all.addObj(curr_c);
@@ -90,7 +89,7 @@ curr_line.setDrawArgs(expand_ray_style{:});
 fig_all.addObj(curr_line);
 
 for t = 0:dt:1
-    curr_t.setWeights([t, 1-t]);
+    curr_t = transform.BlendTransform(refl_t, t, transform.Translation, 1-t);
     figure(1); clf;
     fig_all.objects{end-1}.resetTransform();
     fig_all.objects{end-1}.previewTransform(curr_t);
@@ -127,7 +126,6 @@ i = 3;
 curr_fid = raypath(i);
 refl_t = transform.MirrorReflection(curr_c.getFaceNormal(curr_fid), ...
     mean(curr_c.getFaceVertices(curr_fid)));
-curr_t = transform.BlendTransform(refl_t, transform.Translation);
 
 curr_c.setDrawArgs(expand_crystal_style{:});
 fig_all.addObj(curr_c);
@@ -137,7 +135,7 @@ curr_line.setDrawArgs(expand_ray_style{:});
 fig_all.addObj(curr_line);
 
 for t = 0:dt:1
-    curr_t.setWeights([t, 1-t]);
+    curr_t = transform.BlendTransform(refl_t, t, transform.Translation, 1-t);
     figure(1); clf;
     fig_all.objects{end-1}.resetTransform();
     fig_all.objects{end-1}.previewTransform(curr_t);
@@ -173,7 +171,6 @@ i = 4;
 curr_fid = raypath(i);
 refl_t = transform.MirrorReflection(curr_c.getFaceNormal(curr_fid), ...
     mean(curr_c.getFaceVertices(curr_fid)));
-curr_t = transform.BlendTransform(refl_t, transform.Translation);
 
 curr_c.setDrawArgs(expand_crystal_style{:});
 fig_all.addObj(curr_c);
@@ -183,7 +180,7 @@ curr_line.setDrawArgs(expand_ray_style{:});
 fig_all.addObj(curr_line);
 
 for t = 0:dt:1
-    curr_t.setWeights([t, 1-t]);
+    curr_t = transform.BlendTransform(refl_t, t, transform.Translation, 1-t);
     figure(1); clf;
     fig_all.objects{end-1}.resetTransform();
     fig_all.objects{end-1}.previewTransform(curr_t);

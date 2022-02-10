@@ -13,13 +13,13 @@ methods
     function previewTransform(obj, t)
         class_t = class(t);
         if strcmpi(class_t, 'transform.Scale')
-            obj.scale.merge(t);
+            obj.scale = obj.scale.merge(t);
         elseif strcmpi(class_t, 'transform.Rotation')
-            obj.rotation.merge(t);
+            obj.rotation = obj.rotation.merge(t);
         elseif strcmpi(class_t, 'transform.Translation')
-            obj.translation.merge(t);
+            obj.translation = obj.translation.merge(t);
         else
-            obj.other_transforms.merge(t);
+            obj.other_transforms = obj.other_transforms.merge(t);
         end
     end
 
@@ -68,10 +68,10 @@ methods (Access = protected)
     
     function copyFrom(obj, from_obj)
         obj.vtx = from_obj.vtx;
-        obj.rotation = from_obj.rotation.makeCopy();
-        obj.scale = from_obj.scale.makeCopy();
-        obj.translation = from_obj.translation.makeCopy();
-        obj.other_transforms = from_obj.other_transforms.makeCopy();
+        obj.rotation = from_obj.rotation;
+        obj.scale = from_obj.scale;
+        obj.translation = from_obj.translation;
+        obj.other_transforms = from_obj.other_transforms;
         obj.parent = from_obj.parent;
         obj.draw_args = from_obj.draw_args;
     end

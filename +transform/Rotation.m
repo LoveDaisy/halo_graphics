@@ -4,12 +4,7 @@ methods
         vtx = vtx * obj.matt;
     end
 
-    function t = makeCopy(obj)
-        t = transform.Rotation;
-        t.copyFrom(obj);
-    end
-
-    function merge(obj, t)
+    function obj = merge(obj, t)
         obj.matt = obj.matt * t.matt;
     end
 end
@@ -47,13 +42,6 @@ methods
         end
 
         obj.matt = quatrotate([cosd(theta/2), -sind(theta/2) * axis(:)'], eye(3));
-    end
-end
-
-methods (Access = protected)
-    function copyFrom(obj, from_obj)
-        obj.copyFrom@transform.Transform(from_obj);
-        obj.matt = from_obj.matt;
     end
 end
 

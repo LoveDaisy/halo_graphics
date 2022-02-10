@@ -7,27 +7,29 @@ methods
         end
         vtx = vtx_t;
     end
-
-    function t = makeCopy(obj)
-        t = transform.BlendTransform;
-        t.copyFrom(obj);
-    end
 end
 
 methods
     function obj = BlendTransform(varargin)
         t_num = length(varargin);
-        for i = 1:t_num
+        if mod(t_num, 2) ~= 0
+            error('Arguments number must be even');
+        end
+        for i = 1:2:t_num
             if ~isa(varargin{i}, 'transform.Transform')
-                error('All arguments must be transform.Transform');
+                error('Argument at odd location must be transform.Transform');
+            end
+            if ~isreal(varargin{i+1})
+                error('Argument at even location must be a real number');
             end
         end
 
-        obj.transforms = cell(1, t_num);
-        for i = 1:t_num
-            obj.transforms{i} = varargin{i}.makeCopy();
+        obj.transforms = cell(1, t_num/2);
+        obj.weights = zeros(1, t_num/2);
+        for i = 1:2:t_num
+            obj.transforms{(i+1)/2} = varargin{i};
+            obj.weights((i+1)/2) = varargin{i+1};
         end
-        obj.weights = ones(1, t_num) / t_num;
     end
     
     function setWeights(obj, weights)
@@ -37,18 +39,6 @@ methods
             error('weights must be same length of transforms (here is %d)', t_num);
         end
         obj.weights = weights(:)' / sum(weights(:));
-    end
-end
-
-methods (Access = protected)
-    function copyFrom(obj, from_obj)
-        obj.copyFrom@transform.Transform(from_obj);
-        t_num = length(from_obj.transforms);
-        obj.transforms = cell(1, t_num);
-        for i = 1:t_num
-            obj.transforms{i} = from_obj.transforms{i}.makeCopy();
-        end
-        obj.weights = from_obj.weights;
     end
 end
 

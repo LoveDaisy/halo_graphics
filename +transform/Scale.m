@@ -4,12 +4,7 @@ methods
         vtx = vtx * obj.s;
     end
 
-    function t = makeCopy(obj)
-        t = transform.Scale;
-        t.copyFrom(obj);
-    end
-
-    function merge(obj, t)
+    function obj = merge(obj, t)
         obj.s = obj.s * t.s;
     end
 end
@@ -25,13 +20,6 @@ methods
         p.parse(varargin{:});
 
         obj.s = p.Results.s;
-    end
-end
-
-methods (Access = protected)
-    function copyFrom(obj, from_obj)
-        obj.copyFrom@transform.Transform(from_obj);
-        obj.s = from_obj.s;
     end
 end
 

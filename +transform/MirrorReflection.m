@@ -4,11 +4,6 @@ methods
         vtx = bsxfun(@minus, vtx, obj.p) * (eye(3) - 2 * obj.n' * obj.n);
         vtx = bsxfun(@plus, vtx, obj.p);
     end
-
-    function t = makeCopy(obj)
-        t = transform.MirrorReflection;
-        t.copyFrom(obj);
-    end
 end
 
 methods
@@ -25,14 +20,6 @@ methods
 
         obj.n = p.Results.normal(:)';
         obj.p = p.Results.p0(:)';
-    end
-end
-
-methods (Access = protected)
-    function copyFrom(obj, from_obj)
-        obj.copyFrom@transform.Transform(from_obj);
-        obj.n = from_obj.n;
-        obj.p = from_obj.p;
     end
 end
 
