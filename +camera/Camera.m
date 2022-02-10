@@ -42,6 +42,7 @@ methods
         end
 
         set(gca, axes_args{:}, obj.other_axes_args{:});
+        drawnow;
         
         if ~isempty(obj.output_fmt)
             saveas(gcf, sprintf(obj.output_fmt, obj.cnt));
