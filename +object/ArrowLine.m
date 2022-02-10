@@ -14,8 +14,6 @@ methods
         else
             obj.line_obj = object.Line(p.Results.pts);
         end
-        [xx, yy, zz] = sphere();
-        obj.sphere_obj = object.Surface(xx, yy, zz);
         obj.start_arrow = p.Results.StartArrow;
         obj.end_arrow = p.Results.EndArrow;
     end
@@ -30,8 +28,8 @@ methods
         next_plot = get(gca, 'NextPlot');
         hold on;
         vtx = obj.getWorldVtx();
-        line_args = object.Graphics3DObj.filterArgs(args, {'ArrowScale', 'PointScale'});
-        line(vtx(:, 1), vtx(:, 2), vtx(:, 3), line_args{:});
+        line_args = object.Graphics3DObj.filterArgs(args, {'ArrowScale'});
+        obj.line_obj.draw(line_args{:});
         
         % Set arrow scale
         scale_set = false;
@@ -45,28 +43,6 @@ methods
             seg_len = sqrt(sum(diff(vtx).^2, 2));
             total_len = sum(seg_len);
             obj.arrow_obj.scale = total_len * obj.DEFAULT_CONE_SCALE;
-        end
-
-        % Set point scale
-        scale_set = false;
-        for i = 1:2:length(args)
-            if strcmpi(args{i}, 'PointScale')
-                obj.sphere_obj.scale.s = args{i+1};
-                scale_set = true;
-            end
-        end
-        if scale_set
-            % Draw points
-            surf_args = object.Graphics3DObj.filterArgs(args, {'PointScale', 'ArrowScale'});
-            for i = 1:length(surf_args)
-                if strcmpi(surf_args{i}, 'Color')
-                    surf_args{i} = 'FaceColor';
-                end
-            end
-            for i = 1:size(vtx, 1)
-                obj.sphere_obj.translation.v = vtx(i, :);
-                obj.sphere_obj.draw(surf_args{:}, 'EdgeColor', 'none');
-            end
         end
         
         % Set arrow pose and position, then draw
@@ -147,7 +123,6 @@ end
 properties
     arrow_obj = object.makeArrowCone(0.3);
     line_obj = object.Line;
-    sphere_obj = [];
     start_arrow = [];
     end_arrow = [];
 end

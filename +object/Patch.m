@@ -55,7 +55,7 @@ methods
                 end
                 v1 = vtx(i1, :);
                 v2 = vtx(i2, :);
-                plot3([v1(1), v2(1)], [v1(2), v2(2)], [v1(3), v2(3)], line_args{:});
+                line([v1(1), v2(1)], [v1(2), v2(2)], [v1(3), v2(3)], line_args{:});
                 edge_finish(i1, i2) = true;
                 edge_finish(i2, i1) = true;
             end
