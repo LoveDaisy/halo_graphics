@@ -61,7 +61,8 @@ axes_args = {'Position', [0, 0, 1, 1], 'Projection', 'Perspective', ...
     'CameraViewAngle', 15, 'Visible', 'off', 'DataAspectRatio', [1, 1, 1], 'PlotBoxAspectRatio', [3, 4, 4]};
 
 %%
-dt = 0.1;
+dt = 0.05;
+anim = animate.SimpleSmoothAnimate;
 % Move
 figure(1); clf;
 set(gcf, fig_args{:});
@@ -89,10 +90,12 @@ curr_line.setDrawArgs(expand_ray_style{:});
 refl_obj = object.ComplexObj(curr_c, curr_line);
 fig_all.addObj(refl_obj);
 
-for t = 0:dt:1
-    curr_t = transform.BlendTransform(refl_t, t, transform.Translation, 1-t);
+anim.reset();
+anim.setTickStep(dt);
+anim.addAction(@(t) fig_all.objects{end}.dynamicTransform(t), transform.Translation, refl_t);
+while ~anim.finished()
+    anim.tick();
     figure(1); clf;
-    fig_all.objects{end}.dynamicTransform(curr_t);
     fig_all.draw();
     set(gca, axes_args{:});
     drawnow;
@@ -139,10 +142,12 @@ curr_line.setDrawArgs(expand_ray_style{:});
 refl_obj = object.ComplexObj(curr_c, curr_line);
 fig_all.addObj(refl_obj);
 
-for t = 0:dt:1
-    curr_t = transform.BlendTransform(refl_t, t, transform.Translation, 1-t);
+anim.reset();
+anim.setTickStep(dt);
+anim.addAction(@(t) fig_all.objects{end}.dynamicTransform(t), transform.Translation, refl_t);
+while ~anim.finished()
+    anim.tick();
     figure(1); clf;
-    fig_all.objects{end}.dynamicTransform(curr_t);
     fig_all.draw();
     set(gca, axes_args{:});
     drawnow;
@@ -188,10 +193,12 @@ curr_line.setDrawArgs(expand_ray_style{:});
 refl_obj = object.ComplexObj(curr_c, curr_line);
 fig_all.addObj(refl_obj);
 
-for t = 0:dt:1
-    curr_t = transform.BlendTransform(refl_t, t, transform.Translation, 1-t);
+anim.reset();
+anim.setTickStep(dt);
+anim.addAction(@(t) fig_all.objects{end}.dynamicTransform(t), transform.Translation, refl_t);
+while ~anim.finished()
+    anim.tick();
     figure(1); clf;
-    fig_all.objects{end}.dynamicTransform(curr_t);
     fig_all.draw();
     set(gca, axes_args{:});
     drawnow;
