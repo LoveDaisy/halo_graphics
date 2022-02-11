@@ -60,6 +60,30 @@ methods
         num = length(obj.other_args);
         args(idx:idx+num-1) = obj.other_args;
     end
+    
+    function setLineWidth(obj, w)
+        obj.line_width = w;
+    end
+    
+    function setLineStyle(obj, s)
+        obj.line_style = s;
+    end
+    
+    function setLineColor(obj, c)
+        obj.line_color = c;
+    end
+    
+    function setFaceColor(obj, c)
+        obj.face_color = c;
+    end
+    
+    function setFaceAlpha(obj, a)
+        obj.face_alpha = a;
+    end
+    
+    function setDrawArgs(obj, args)
+        obj.other_args = args;
+    end
 end
 
 methods (Access = protected)
@@ -73,7 +97,7 @@ methods (Access = protected)
     end
 end
 
-properties (Access = {?object.Graphics3DObj})
+properties (GetAccess = public)
     line_width
     line_style
     line_color

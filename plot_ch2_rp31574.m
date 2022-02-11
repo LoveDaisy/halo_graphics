@@ -54,7 +54,8 @@ clear curr_*
 final_t = transform.Rotation('from', [0, 0, -1], 'to', [1, 0, 0]);
 fig_all.dynamicTransform(final_t);
 
-%%
+%
+% Set some animation parameters
 dt = 1/10;
 anim = animate.SimpleSmoothAnimate;
 cam = render.Camera('Position', [0, 0, 1, 1], 'Projection', 'Perspective', ...
@@ -62,7 +63,8 @@ cam = render.Camera('Position', [0, 0, 1, 1], 'Projection', 'Perspective', ...
     'CameraViewAngle', 15, 'Visible', 'off', 'DataAspectRatio', [1, 1, 1], 'PlotBoxAspectRatio', [3, 4, 4]);
 % cam.setOutputFmt('output/%04d.png');
 
-% Move
+%% ================ Start animation ===================
+% Anim 1. Move camera for 1st reflection
 canvas_fig = figure(1); clf;
 set(canvas_fig, 'Color', 'w', 'Position', [0, 400, figure_size * size_factor]);
 cam.render(fig_all);
@@ -75,7 +77,7 @@ anim.addPostActions(@cam.update);
 anim.play();
 
 %%
-% Reflect
+% Anim 2. 1st reflection
 curr_c = c0;
 i=2;
 curr_fid = raypath(i);
@@ -107,7 +109,7 @@ fig_all.addObj(curr_c);
 fig_all.addObj(curr_line);
 
 %%
-% Move
+% Anim 3. Move camera for 2nd reflection
 clf(canvas_fig);
 cam.render(fig_all);
 
@@ -119,7 +121,7 @@ anim.addPostActions(@cam.update);
 anim.play();
 
 %%
-% Reflet
+% Anim 4. 2nd refletion
 fig_all.objects = fig_all.objects(1:end-1);
 curr_line = object.ArrowLine(expand_raypath_pts(3:4, :));
 curr_line.setMaterial(expand_ray_style);
@@ -155,7 +157,7 @@ fig_all.addObj(curr_c);
 fig_all.addObj(curr_line);
 
 %%
-% Move
+% Anim 5. Move camera for 3rd reflection
 clf(canvas_fig);
 cam.render(fig_all);
 
@@ -167,7 +169,7 @@ anim.addPostActions(@cam.update);
 anim.play();
 
 %%
-% Reflet
+% Anim 6. 3rd refletion
 fig_all.objects = fig_all.objects(1:end-1);
 curr_line = object.ArrowLine(expand_raypath_pts(4:5, :));
 curr_line.setMaterial(expand_ray_style);
@@ -204,7 +206,7 @@ fig_all.addObj(curr_c);
 fig_all.addObj(curr_line);
 
 %%
-% Move
+% Anim 7. Move camera for final display
 clf(canvas_fig);
 cam.render(fig_all);
 
