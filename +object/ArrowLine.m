@@ -9,6 +9,7 @@ methods
         p.parse(varargin{:});
 
         obj.vtx = p.Results.pts;
+        obj.arrow_obj = obj.makeArrowCone(0.3);
         if isempty(p.Results.pts)
             obj.line_obj = object.Line;
         else
@@ -116,14 +117,42 @@ methods (Access = protected)
     end
 end
 
+methods (Static)
+    function obj = makeArrowCone(varargin)
+        p = inputParser;
+        p.addOptional('r', 0.5, @(x) validateattributes(x, {'numeric'}, {'positive'}));
+        p.parse(varargin{:});
+
+        % Make cone
+        circ = [cosd(0:30:360); sind(0:30:360)];
+        num = size(circ, 2);
+
+        xx = [zeros(1, num); circ(1, :) * p.Results.r; zeros(1, num)];
+        yy = [zeros(1, num); circ(2, :) * p.Results.r; zeros(1, num)];
+        zz = [zeros(1, num); -ones(2, num)];
+
+        cone = object.Surface(xx, yy, zz);
+        cone.setMaterial(render.Material('FaceColor', 'w', 'EdgeColor', 'none'));
+
+        % Make strides
+        x = [-1:.25:-.1, -.02];
+        strides = cell(1, length(x));
+        for i = 1:length(x)
+            strides{i} = object.Line([circ' * p.Results.r * (-x(i)) * 1.1, ones(num, 1) * x(i)]);
+        end
+
+        obj = object.ComplexObj(cone, strides{:});
+    end
+end
+
 properties (Constant)
     DEFAULT_CONE_SCALE = 0.04;
 end
 
 properties
-    arrow_obj = object.makeArrowCone(0.3);
-    line_obj = object.Line;
-    start_arrow = [];
-    end_arrow = [];
+    arrow_obj;
+    line_obj;
+    start_arrow;
+    end_arrow;
 end
 end
