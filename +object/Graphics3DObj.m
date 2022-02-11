@@ -37,6 +37,14 @@ methods
         obj.translation = transform.Translation;
         obj.other_transforms = transform.CompositeTransform;
     end
+    
+    function setScale(obj, s, o)
+        if nargin == 2
+            o = [0, 0, 0];
+        end
+        obj.scale.s = s;
+        obj.scale.o = o;
+    end
 end
 
 methods (Access = protected)
