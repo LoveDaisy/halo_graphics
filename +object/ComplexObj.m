@@ -23,7 +23,7 @@ methods
         next_plot = get(gca, 'NextPlot');
         hold on;
         for i = 1:length(obj.objects)
-            obj.objects{i}.draw(obj.draw_args{:}, varargin{:});
+            obj.objects{i}.draw(varargin{:});
         end
         set(gca, 'NextPlot', next_plot);
     end

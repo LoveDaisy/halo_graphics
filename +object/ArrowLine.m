@@ -23,7 +23,7 @@ end
 methods
     % ========== Override methods ==========
     function draw(obj, varargin)
-        args = cat(1, obj.draw_args(:), varargin(:));
+        args = cat(2, obj.material.getDrawArgs(), varargin);
 
         next_plot = get(gca, 'NextPlot');
         hold on;
@@ -110,7 +110,7 @@ methods (Access = protected)
         d = v1 - v0;
         obj.arrow_obj.rotation = transform.Rotation('from', [0, 0, 1], 'to', d);
         obj.arrow_obj.translation = transform.Translation(v0 + d * abs(x));
-        args = cat(1, obj.draw_args(:), varargin(:));
+        args = cat(2, obj.material.getDrawArgs(), varargin);
         args = object.Graphics3DObj.filterArgs(args, {'ArrowScale', 'PointScale'}, {'^Edge'});
         obj.arrow_obj.draw(args{:});
     end

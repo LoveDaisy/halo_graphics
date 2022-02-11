@@ -12,7 +12,7 @@ yy = [zeros(1, num); circ(2, :) * p.Results.r; zeros(1, num)];
 zz = [zeros(1, num); -ones(2, num)];
 
 cone = object.Surface(xx, yy, zz);
-cone.setDrawArgs('FaceColor', 'w', 'EdgeColor', 'none');
+cone.setMaterial(render.Material('FaceColor', 'w', 'EdgeColor', 'none'));
 
 % Make strides
 x = [-1:.25:-.1, -.02];

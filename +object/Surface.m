@@ -26,7 +26,7 @@ methods
         yy = reshape(vtx(:, 2), obj.data_size);
         zz = reshape(vtx(:, 3), obj.data_size);
         
-        args = cat(1, obj.draw_args(:), varargin(:));
+        args = cat(2, obj.material.getDrawArgs(), varargin);
         args = object.Graphics3DObj.filterArgs(args, {'Color'});
         surf(xx, yy, zz, args{:});
     end

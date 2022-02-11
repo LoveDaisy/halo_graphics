@@ -6,8 +6,8 @@ methods (Abstract)
 end
 
 methods
-    function setDrawArgs(obj, varargin)
-        obj.draw_args = varargin;
+    function setMaterial(obj, m)
+        obj.material = m;
     end
     
     function dynamicTransform(obj, t)
@@ -47,7 +47,7 @@ methods (Access = protected)
         obj.translation = transform.Translation;
         obj.other_transforms = transform.CompositeTransform;
         obj.parent = [];
-        obj.draw_args = {};
+        obj.material = render.Material;
     end
 
     function vtx = getWorldVtx(obj)
@@ -73,7 +73,7 @@ methods (Access = protected)
         obj.translation = from_obj.translation;
         obj.other_transforms = from_obj.other_transforms;
         obj.parent = from_obj.parent;
-        obj.draw_args = from_obj.draw_args;
+        obj.material = from_obj.material;
     end
 end
 
@@ -134,6 +134,6 @@ properties (Access = protected)
     translation
     other_transforms
     parent
-    draw_args
+    material
 end
 end

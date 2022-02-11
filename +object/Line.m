@@ -16,7 +16,7 @@ methods
     function draw(obj, varargin)
         vtx = obj.getWorldVtx();
         v_num = size(vtx, 1);
-        args = cat(1, obj.draw_args(:), varargin(:));
+        args = cat(2, obj.material.getDrawArgs(), varargin);
         
         next_plot = get(gca, 'NextPlot');
         hold on;

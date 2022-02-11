@@ -29,10 +29,10 @@ methods
         hold on;
 
         vtx = obj.getWorldVtx();
-        args = cat(1, obj.draw_args(:), varargin(:));
+        args = cat(2, obj.material.getDrawArgs(), varargin);
 
         % Draw faces
-        face_args = object.Graphics3DObj.filterArgs(args, {}, {'^Line', '^Edge'});
+        face_args = object.Graphics3DObj.filterArgs(args, {'Color'}, {'^Line', '^Edge'});
         patch('Faces', obj.faces, 'Vertices', vtx, 'EdgeColor', 'none', face_args{:});
         
         % Draw lines

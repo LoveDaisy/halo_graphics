@@ -17,7 +17,7 @@ methods
     % ========== Override methods ==========
     function draw(obj, varargin)
         vtx = obj.vtx;
-        args = cat(1, obj.draw_args(:), varargin(:), {'EdgeColor'; 'none'});
+        args = cat(2, obj.material.getDrawArgs(), varargin, {'EdgeColor', 'none'});
         surf_args = object.Graphics3DObj.filterArgs(args, {'PointScale'});
 
         % Set point scale
