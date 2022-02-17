@@ -78,7 +78,7 @@ anim.play();
 %%
 % Blink 1st mirror face
 blink_material = render.Material('FaceColor', [255, 252, 180]/255, 'EdgeColor', 'k', ...
-    'LineStyle', ':', 'LineWidth', 1.2 * size_factor);
+    'LineStyle', ':', 'LineWidth', 1.8 * size_factor);
 
 mirror_surface = c0.getPatch(raypath(2));
 mirror_center = mean(mirror_surface.getFaceVertices(1));
@@ -88,9 +88,9 @@ fig_all.addObj(mirror_surface);
 blink_anim = animate.BlinkAnimate;
 blink_anim.setRepeatTimes(3);
 blink_anim.setTickStep(dt);
-blink_anim.setDuration(0.9);
+blink_anim.setDuration(1.3);
 blink_anim.addAction(@blink_material.setFaceAlpha, 1, 0);
-blink_anim.addAction(@blink_material.setLineColor, [0,0,0], [1,1,1]);
+blink_anim.addAction(@blink_material.setLineColor, [1,1,1]*0.3, [1,1,1]);
 blink_anim.addAction(@(s) fig_all.objects{end}.setScale(s, mirror_center), 1, 2.5);
 blink_anim.addPostActions(@clf, canvas_fig);
 blink_anim.addPostActions(@cam.render, fig_all);
@@ -152,9 +152,9 @@ fig_all.addObj(mirror_surface);
 blink_anim = animate.BlinkAnimate;
 blink_anim.setRepeatTimes(3);
 blink_anim.setTickStep(dt);
-blink_anim.setDuration(0.9);
+blink_anim.setDuration(1.3);
 blink_anim.addAction(@blink_material.setFaceAlpha, 1, 0);
-blink_anim.addAction(@blink_material.setLineColor, [0,0,0], [1,1,1]);
+blink_anim.addAction(@blink_material.setLineColor, [1,1,1]*0.3, [1,1,1]);
 blink_anim.addAction(@(s) fig_all.objects{end}.setScale(s, mirror_center), 1, 3);
 blink_anim.addPostActions(@clf, canvas_fig);
 blink_anim.addPostActions(@cam.render, fig_all);
@@ -220,9 +220,9 @@ fig_all.addObj(mirror_surface);
 blink_anim = animate.BlinkAnimate;
 blink_anim.setRepeatTimes(3);
 blink_anim.setTickStep(dt);
-blink_anim.setDuration(0.9);
+blink_anim.setDuration(1.3);
 blink_anim.addAction(@blink_material.setFaceAlpha, 1, 0);
-blink_anim.addAction(@blink_material.setLineColor, [0,0,0], [1,1,1]);
+blink_anim.addAction(@blink_material.setLineColor, [1,1,1]*0.3, [1,1,1]);
 blink_anim.addAction(@(s) fig_all.objects{end}.setScale(s, mirror_center), 1, 3);
 blink_anim.addPostActions(@clf, canvas_fig);
 blink_anim.addPostActions(@cam.render, fig_all);
