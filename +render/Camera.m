@@ -6,6 +6,7 @@ methods
             error('Arguments must be even');
         end
         
+        obj.cam_proj = 'perspective';
         obj.cam_pos = [];
         obj.cam_target = [];
         obj.other_axes_args = {};
@@ -18,6 +19,8 @@ methods
                 obj.cam_pos = varargin{i+1};
             elseif strcmpi(varargin{i}, 'CameraTarget')
                 obj.cam_target = varargin{i+1};
+            elseif strcmpi(varargin{i}, 'Projection')
+                obj.cam_proj = varargin{i+1};
             else
                 unused_idx(i:i+1) = true;
             end
@@ -39,6 +42,10 @@ methods
         end
         if ~isempty(obj.cam_target)
             axes_args(idx:idx+1) = {'CameraTarget', obj.cam_target};
+            idx = idx + 2;
+        end
+        if ~isempty(obj.cam_proj)
+            axes_args(idx:idx+1) = {'Projection', obj.cam_proj};
         end
 
         set(gca, axes_args{:}, obj.other_axes_args{:});
@@ -69,13 +76,18 @@ methods
     function setCamTarget(obj, t)
         obj.cam_target = t;
     end
+    
+    function setCamProjection(obj, proj)
+        obj.cam_proj = proj;
+    end
 end
 
 properties (Access = protected)
-    cam_pos;
-    cam_target;
-    other_axes_args;
-    cnt;
-    output_fmt;
+    cam_proj
+    cam_pos
+    cam_target
+    other_axes_args
+    cnt
+    output_fmt
 end
 end
