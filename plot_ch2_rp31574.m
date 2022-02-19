@@ -5,7 +5,7 @@ size_factor = 1.5;
 
 % Style for crystals
 crystal_material = render.Material('FaceColor', 'w', 'FaceAlpha', 0.8, ...
-    'LineWidth', 2 * size_factor, 'EdgeColor', 'k');
+    'LineWidth', 2 * size_factor, 'EdgeColor', 'k', 'NumberColor', [1, 1, 1] * 0.7);
 expand_crystal_material = render.Material('FaceColor', 'w', 'FaceAlpha', 0.6, 'LineStyle', ':', ...
     'LineWidth', 1 * size_factor, 'EdgeColor', [1, 1, 1] * 0.5);
 
@@ -36,8 +36,10 @@ expand_raypath_pts = raypath_pts;
 
 %%
 % Start compose figures
-c0 = object.Patch(crystal.vtx, crystal.face);
+enable_crystal_number = false;
+c0 = object.CrystalObj(crystal_h);
 c0.setMaterial(crystal_material);
+c0.enableFaceNumber(enable_crystal_number);
 
 fig_all = object.ComplexObj(c0);
 
@@ -53,25 +55,26 @@ final_t = transform.Rotation('from', [0, 0, -1], 'to', [1, 0, 0]);
 fig_all.dynamicTransform(final_t);
 
 % Set some animation parameters
-projective_cam = render.Camera('Position', [0, 0, 1, 1], 'Projection', 'Perspective', ...
+cam = render.Camera('Position', [0, 0, 1, 1], 'Projection', 'Perspective', ...
     'CameraPosition', [cosd(50), sind(50), 0.4] * 15, 'CameraTarget', [0, 0, 0], ...
     'CameraViewAngle', 11, 'Visible', 'off', 'DataAspectRatio', [1, 1, 1], 'PlotBoxAspectRatio', [3, 4, 4]);
-projective_cam.setOutputFmt('output/psp/%04d.png');
-
-orthographic_cam = render.Camera('Position', [0, 0, 1, 1], 'Projection', 'Orthographic', ...
-    'CameraPosition', [cosd(0), sind(0), 0] * 15, 'CameraTarget', [0, 0, 0], ...
-    'CameraViewAngle', 11, 'Visible', 'off', 'DataAspectRatio', [1, 1, 1], 'PlotBoxAspectRatio', [3, 4, 4]);
-orthographic_cam.setOutputFmt('output/orth/%04d.png');
+if enable_crystal_number
+    cam.setOutputFmt('output/ch2_img/rp31574_fn_%02d.png');
+else
+    cam.setOutputFmt('output/ch2_img/rp31574_%02d.png');
+end
 
 % Normal view
 canvas_fig = figure(1); clf;
 set(canvas_fig, 'Color', 'w', 'Position', [0, 400, figure_size * size_factor]);
-projective_cam.render(fig_all);
+cam.render(fig_all);
 
 % Side view
-orthographic_cam.render(fig_all);
+cam.setCamProjection('orthographic');
+cam.setCamPose([0, 0, 15, 0, 0, 0]);
+cam.render(fig_all);
 
-orthographic_cam.setCamPose([90, 0, 15, 0, 0, 0]);
-orthographic_cam.render(fig_all);
+cam.setCamPose([90, 0, 15, 0, 0, 0]);
+cam.render(fig_all);
 
 

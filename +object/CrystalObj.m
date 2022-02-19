@@ -14,7 +14,7 @@ methods
             [obj.vtx([4, 4, 4, 4, 3, 3, 3, 3, 2, 2, 2, 2], 1), ...
              obj.vtx([2, 2, 1, 1, 3, 2, 1, 6, 2, 2, 1, 1], 2), ...
              obj.vtx([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], 3)], ...
-            [obj.vtx([2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4], 1), ...
+            [obj.vtx([1, 1, 1, 1, 3, 3, 3, 3, 4, 4, 4, 4], 1), ...
              obj.vtx([2, 2, 1, 1, 3, 2, 1, 6, 2, 2, 1, 1], 2), ...
              obj.vtx([7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7], 3)], ...
             [obj.vtx([1, 2, 3, 4, 5, 6, 1; 7, 8, 9, 10, 11, 12, 7], 1), ...
@@ -77,7 +77,7 @@ methods (Access = protected)
     end
     
     % ========== Other protected methods ==========
-    function drawNumberedFaces(obj, vtx, args)
+    function drawNumberedFaces(obj, ~, args)
         curr_fig = gcf;
 
         tex_background = 'w';
@@ -86,13 +86,13 @@ methods (Access = protected)
             if strcmpi(args{i}, 'FaceColor')
                 tex_background = args{i+1};
             end
-            if strcmpi(args{i}, 'Color') || strcmpi(args{i}, 'EdgeColor')
+            if strcmpi(args{i}, 'NumberColor')
                 tex_color = args{i+1};
             end
         end
         
         t0 = obj.getWorldTransform();
-        surf_args = object.Graphics3DObj.filterArgs(args, {'Color', 'FaceColor'}, {'^Line', '^Edge'});
+        surf_args = object.Graphics3DObj.filterArgs(args, {'Color', 'FaceColor', 'NumberColor'}, {'^Line', '^Edge'});
 
         % Offscreen render prism faces
         max_tex_h = 300;
@@ -102,7 +102,7 @@ methods (Access = protected)
         else
             prism_tex_size = floor([3, obj.crystal.h] / obj.crystal.h * max_tex_h);
         end
-        tex_digit_size = floor(min(prism_tex_size .* [1, 0.6]));
+        tex_digit_size = floor(min(prism_tex_size .* [0.8, 0.6] * 0.8));
         tex_digit_args = {'FontName', 'Menlo', 'FontSize', tex_digit_size, ...
                 'FontUnits', 'pixels', 'FontWeight', 'bold', 'HorizontalAlignment', 'center', ...
                 'Color', tex_color};
@@ -119,11 +119,10 @@ methods (Access = protected)
         close(offscreen_fig);
         
         % Offscreen render basal faces 1
-        basal_tex_size = floor([sqrt(3)/2, 1] * prism_tex_size(1) / 3);
+        basal_tex_size = floor([sqrt(3)/2, 1.5] * prism_tex_size(1) / 3);
         offscreen_fig = figure('color', tex_background, 'visible', 'off', ...
             'position', [0, 0, basal_tex_size]);
-        set(offscreen_fig, 'color', tex_background, 'visible', 'off', 'position', [0, 0, basal_tex_size]);
-        text(0, 0, '1', tex_digit_args{:});
+        text(0, 0, '1', tex_digit_args{:}, 'Rotation', -90);
         set(gca, 'xlim', [-1, 1] * sqrt(3)/2, 'ylim', [-1, 1], 'position', [0, 0, 1, 1]);
         axis off;
         frame_data = getframe();
@@ -133,8 +132,7 @@ methods (Access = protected)
         % Offscreen render basal faces 2
         offscreen_fig = figure('color', tex_background, 'visible', 'off', ...
             'position', [0, 0, basal_tex_size]);
-        set(offscreen_fig, 'color', tex_background, 'visible', 'off', 'position', [0, 0, basal_tex_size]);
-        text(0, 0, '2', tex_digit_args{:});
+        text(0, 0, '2', tex_digit_args{:}, 'Rotation', 90);
         set(gca, 'xlim', [-1, 1] * sqrt(3)/2, 'ylim', [-1, 1], 'position', [0, 0, 1, 1]);
         axis off;
         frame_data = getframe();
