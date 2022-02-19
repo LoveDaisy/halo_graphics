@@ -32,40 +32,10 @@ methods
         args = cat(2, obj.material.getDrawArgs(), varargin);
 
         % Draw faces
-        face_args = object.Graphics3DObj.filterArgs(args, {'Color'}, {'^Line', '^Edge'});
-        patch('Faces', obj.faces, 'Vertices', vtx, 'EdgeColor', 'none', face_args{:});
+        obj.drawFaces(vtx, args);
         
         % Draw lines
-        line_args = object.Graphics3DObj.keepArgs(args, {}, {'^Line', '^Edge'});
-        for i = 1:length(line_args)
-            if strcmpi(line_args{i}, 'EdgeColor')
-                line_args{i} = 'Color';
-            end
-        end
-        face_num = size(obj.faces, 1);
-        vtx_num = size(obj.vtx, 1);
-        edge_finish = false(vtx_num, vtx_num);
-        line_pts = nan(face_num * size(obj.faces, 2), 3);
-        idx = 1;
-        for i = 1:face_num
-            m = sum(~isnan(obj.faces(i, :)));
-            for j = 1:m
-                i1 = obj.faces(i, j);
-                i2 = obj.faces(i, mod(j, m) + 1);
-                if edge_finish(i1, i2)
-                    continue;
-                end
-                v1 = vtx(i1, :);
-                v2 = vtx(i2, :);
-                line_pts(idx, :) = v1;
-                line_pts(idx+1, :) = v2;
-                idx = idx + 2;
-                edge_finish(i1, i2) = true;
-                edge_finish(i2, i1) = true;
-            end
-            idx = idx + 1;
-        end
-        line(line_pts(:, 1), line_pts(:, 2), line_pts(:, 3), line_args{:});
+        obj.drawEdges(vtx, args);
         
         set(gca, 'NextPlot', next_plot);
     end
@@ -103,6 +73,43 @@ methods (Access = protected)
     end
     
     % ========== Other protected methods ==========
+    function drawFaces(obj, vtx, args)
+        face_args = object.Graphics3DObj.filterArgs(args, {'Color'}, {'^Line', '^Edge'});
+        patch('Faces', obj.faces, 'Vertices', vtx, 'EdgeColor', 'none', face_args{:});
+    end
+    
+    function drawEdges(obj, vtx, args)
+        line_args = object.Graphics3DObj.keepArgs(args, {}, {'^Line', '^Edge'});
+        for i = 1:length(line_args)
+            if strcmpi(line_args{i}, 'EdgeColor')
+                line_args{i} = 'Color';
+            end
+        end
+        face_num = size(obj.faces, 1);
+        vtx_num = size(obj.vtx, 1);
+        edge_finish = false(vtx_num, vtx_num);
+        line_pts = nan(face_num * size(obj.faces, 2), 3);
+        idx = 1;
+        for i = 1:face_num
+            m = sum(~isnan(obj.faces(i, :)));
+            for j = 1:m
+                i1 = obj.faces(i, j);
+                i2 = obj.faces(i, mod(j, m) + 1);
+                if edge_finish(i1, i2)
+                    continue;
+                end
+                v1 = vtx(i1, :);
+                v2 = vtx(i2, :);
+                line_pts(idx, :) = v1;
+                line_pts(idx+1, :) = v2;
+                idx = idx + 2;
+                edge_finish(i1, i2) = true;
+                edge_finish(i2, i1) = true;
+            end
+            idx = idx + 1;
+        end
+        line(line_pts(:, 1), line_pts(:, 2), line_pts(:, 3), line_args{:});
+    end
 end
 
 properties
