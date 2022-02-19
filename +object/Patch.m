@@ -74,13 +74,13 @@ methods (Access = protected)
     
     % ========== Other protected methods ==========
     function drawFaces(obj, vtx, args)
-        face_args = object.Graphics3DObj.filterArgs(args, {'Color', 'NumberColor'}, {'^Line', '^Edge'});
+        face_args = object.Graphics3DObj.filterArgs(args, {'Color'}, {'^Line', '^Edge', '^Number'});
         patch('Faces', obj.faces, 'Vertices', vtx, 'EdgeColor', 'none', face_args{:});
     end
     
     function drawEdges(obj, vtx, args)
         line_args = object.Graphics3DObj.keepArgs(args, {}, {'^Line', '^Edge'});
-        line_args = object.Graphics3DObj.filterArgs(line_args, {'NumberColor'});
+        line_args = object.Graphics3DObj.filterArgs(line_args, {}, {'^Number'});
         for i = 1:length(line_args)
             if strcmpi(line_args{i}, 'EdgeColor')
                 line_args{i} = 'Color';

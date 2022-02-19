@@ -82,6 +82,7 @@ methods (Access = protected)
 
         tex_background = 'w';
         tex_color = 'k';
+        tex_scale = 0.8;
         for i = 1:2:length(args)
             if strcmpi(args{i}, 'FaceColor')
                 tex_background = args{i+1};
@@ -89,10 +90,14 @@ methods (Access = protected)
             if strcmpi(args{i}, 'NumberColor')
                 tex_color = args{i+1};
             end
+            if strcmpi(args{i}, 'NumberScale')
+                tex_scale = args{i+1};
+            end
         end
         
         t0 = obj.getWorldTransform();
-        surf_args = object.Graphics3DObj.filterArgs(args, {'Color', 'FaceColor', 'NumberColor'}, {'^Line', '^Edge'});
+        surf_args = object.Graphics3DObj.filterArgs(args, {'Color', 'FaceColor', 'NumberColor', 'NumberScale'}, ...
+            {'^Line', '^Edge'});
 
         % Offscreen render prism faces
         max_tex_h = 300;
@@ -102,7 +107,7 @@ methods (Access = protected)
         else
             prism_tex_size = floor([3, obj.crystal.h] / obj.crystal.h * max_tex_h);
         end
-        tex_digit_size = floor(min(prism_tex_size .* [0.8, 0.6] * 0.8));
+        tex_digit_size = floor(min(prism_tex_size .* [0.8, 0.6] * tex_scale));
         tex_digit_args = {'FontName', 'Menlo', 'FontSize', tex_digit_size, ...
                 'FontUnits', 'pixels', 'FontWeight', 'bold', 'HorizontalAlignment', 'center', ...
                 'Color', tex_color};
