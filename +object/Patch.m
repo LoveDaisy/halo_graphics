@@ -57,6 +57,8 @@ methods
     function vtx = getFaceVertices(obj, idx)
         face = obj.faces(idx, :);
         vtx = obj.vtx(face(~isnan(face)), :);
+        t0 = obj.getWorldTransform();
+        vtx = t0.transform(vtx);
     end
 
     function p = getPatch(obj, idx)
