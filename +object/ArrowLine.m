@@ -6,10 +6,12 @@ methods
         p.addOptional('pts', [], @(x) validateattributes(x, {'numeric'}, {'ncols', 3}));
         p.addOptional('StartArrow', [], @(x) validateattributes(x, {'numeric'}, {'scalar', 'real'}));
         p.addOptional('EndArrow', [], @(x) validateattributes(x, {'numeric'}, {'scalar', 'real'}));
+        p.addOptional('ArrowSolid', false, @(x) validateattributes(x, {'logical'}, {'scalar'}));
         p.parse(varargin{:});
 
         obj.vtx = p.Results.pts;
-        obj.arrow_obj = obj.makeArrowCone(0.3);
+        obj.arrow_obj = obj.makeArrowCone(0.3, 'solid', p.Results.ArrowSolid);
+        obj.arrow_solid = p.Results.ArrowSolid;
         if isempty(p.Results.pts)
             obj.line_obj = object.Line;
         else
@@ -29,7 +31,7 @@ methods
         next_plot = get(gca, 'NextPlot');
         hold on;
         vtx = obj.getWorldVtx();
-        line_args = object.Graphics3DObj.filterArgs(args, {'ArrowScale'});
+        line_args = object.Graphics3DObj.filterArgs(args, {'ArrowScale', 'ArrowSolid'});
         obj.line_obj.draw(line_args{:});
         
         % Set arrow scale
@@ -98,6 +100,7 @@ methods (Access = protected)
         obj.copyFrom@object.Graphics3DObj(from_obj);
 
         obj.arrow_obj = from_obj.arrow_obj.makeCopy();
+        obj.arrow_solid = from_obj.arrow_solid;
         obj.line_obj = from_obj.line_obj.makeCopy();
         obj.start_arrow = from_obj.start_arrow;
         obj.end_arrow = from_obj.end_arrow;
@@ -111,8 +114,21 @@ methods (Access = protected)
         d = v1 - v0;
         obj.arrow_obj.rotation = transform.Rotation('from', [0, 0, 1], 'to', d);
         obj.arrow_obj.translation = transform.Translation(v0 + d * abs(x));
+        
         args = cat(2, obj.material.getDrawArgs(), varargin);
-        args = object.Graphics3DObj.filterArgs(args, {'ArrowScale', 'PointScale'}, {'^Edge'});
+
+        face_color = 'w';
+        for i = 1:2:length(args)
+            if strcmpi(args{i}, 'Color')
+                face_color = args{i+1};
+            end
+        end
+        if obj.arrow_solid
+            arg_len = length(args);
+            args(arg_len+1:arg_len+2) = {'FaceColor', face_color};
+        end
+
+        args = object.Graphics3DObj.filterArgs(args, {'PointScale'}, {'^Edge', '^Arrow'});
         obj.arrow_obj.draw(args{:});
     end
 end
@@ -121,6 +137,7 @@ methods (Static)
     function obj = makeArrowCone(varargin)
         p = inputParser;
         p.addOptional('r', 0.5, @(x) validateattributes(x, {'numeric'}, {'positive'}));
+        p.addOptional('solid', false, @(x) validateattributes(x, {'logical'}, {'scalar'}));
         p.parse(varargin{:});
 
         % Make cone
@@ -135,13 +152,17 @@ methods (Static)
         cone.setMaterial(render.Material('FaceColor', 'w', 'EdgeColor', 'none'));
 
         % Make strides
-        x = [-1:.25:-.1, -.02];
-        strides = cell(1, length(x));
-        for i = 1:length(x)
-            strides{i} = object.Line([circ' * p.Results.r * (-x(i)) * 1.1, ones(num, 1) * x(i)]);
-        end
+        if ~p.Results.solid
+            x = [-1:.25:-.1, -.02];
+            strides = cell(1, length(x));
+            for i = 1:length(x)
+                strides{i} = object.Line([circ' * p.Results.r * (-x(i)) * 1.1, ones(num, 1) * x(i)]);
+            end
 
-        obj = object.ComplexObj(cone, strides{:});
+            obj = object.ComplexObj(cone, strides{:});
+        else
+            obj = cone;
+        end
     end
 end
 
@@ -151,6 +172,7 @@ end
 
 properties
     arrow_obj;
+    arrow_solid;
     line_obj;
     start_arrow;
     end_arrow;
