@@ -15,7 +15,7 @@ methods
         p.addParameter('from', zeros(3, 1), @(x) validateattributes(x, {'numeric'}, {'vector', 'numel', 3}));
         p.addParameter('to', zeros(3, 1), @(x) validateattributes(x, {'numeric'}, {'vector', 'numel', 3}));
         p.addParameter('axis', zeros(3, 1), @(x) validateattributes(x, {'numeric'}, {'vector', 'numel', 3}));
-        p.addParameter('theta', 0, @(x) validateattributes(x, {'numeric'}, {'vector', 'numel', 3}));
+        p.addParameter('theta', 0, @(x) validateattributes(x, {'numeric'}, {'scalar'}));
         p.parse(varargin{:});
         
         if norm(p.Results.from) > 1e-4 && norm(p.Results.to) > 1e-4
@@ -37,7 +37,11 @@ methods
             theta = 0;
         end
 
-        obj.matt = quatrotate([cosd(theta/2), -sind(theta/2) * axis(:)'], eye(3));
+        if any(isnan(axis))
+            obj.matt = eye(3);
+        else
+            obj.matt = quatrotate([cosd(theta/2), -sind(theta/2) * axis(:)'], eye(3));
+        end
     end
 end
 

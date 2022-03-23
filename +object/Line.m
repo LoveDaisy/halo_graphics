@@ -49,7 +49,7 @@ methods
             surf(xx, yy, zz, surf_args{:}, 'EdgeColor', 'none');
         end
 
-        line_args = object.Graphics3DObj.filterArgs(args, {'PointScale'});
+        line_args = object.Graphics3DObj.filterArgs(args, {'PointScale', 'FaceColor'});
         line(vtx(:, 1), vtx(:, 2), vtx(:, 3), line_args{:});
 
         set(gca, 'NextPlot', next_plot);
