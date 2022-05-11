@@ -18,11 +18,16 @@ r = optics.refract(r0, crystal.face_norm(fid(1), :), 1, crystal.n);
 
 % Inner reflection
 p = p0;
-raypath(1, :) = [p, r];
-for i = 2:rp_len-1
-    p = optics.intersect(p, r, crystal.vtx(crystal.face{fid(i)}, :));
-    r = optics.reflect(r, crystal.face_norm(fid(i), :));
-    raypath(i, :) = [p, r];
+if rp_len > 1
+    raypath(1, :) = [p, r];
+    for i = 2:rp_len-1
+        p = optics.intersect(p, r, crystal.vtx(crystal.face{fid(i)}, :));
+        r = optics.reflect(r, crystal.face_norm(fid(i), :));
+        raypath(i, :) = [p, r];
+    end
+else
+    r = optics.reflect(r, crystal.face_norm(fid(1), :));
+    raypath(1, :) = [p, r];
 end
 
 % Last refraction
