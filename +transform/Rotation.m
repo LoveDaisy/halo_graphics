@@ -34,6 +34,7 @@ methods
             axis = p.Results.axis;
             axis = axis / norm(axis);
             theta = p.Results.theta;
+            mat = [];
         elseif norm(p.Results.mat) > 1e-4
             axis = [];
             mat = p.Results.mat;

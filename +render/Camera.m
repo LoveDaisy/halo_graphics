@@ -28,8 +28,10 @@ methods
         obj.other_axes_args = varargin(unused_idx);
     end
     
-    function render(obj, scene_obj)
-        scene_obj.draw();
+    function render(obj, varargin)
+        for i = 1:length(varargin)
+            varargin{i}.draw();
+        end
         obj.update();
     end
     
@@ -60,6 +62,7 @@ methods
     
     function setOutputFmt(obj, fmt)
         obj.output_fmt = fmt;
+        obj.cnt = 0;
     end
     
     function setCamPosition(obj, p)
